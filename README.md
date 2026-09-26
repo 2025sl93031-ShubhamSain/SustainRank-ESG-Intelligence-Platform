@@ -131,8 +131,9 @@ cd SustainRank-ESG-Intelligence-Platform
 brew install postgresql@16
 brew services start postgresql@16
 
-# Create the database
+# Create the database and set a password for your user
 createdb sustainability_db
+psql -c "ALTER USER $(whoami) WITH PASSWORD 'your_password';"
 ```
 
 On Linux:
@@ -140,11 +141,39 @@ On Linux:
 sudo apt install postgresql
 sudo systemctl start postgresql
 sudo -u postgres createdb sustainability_db
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'your_password';"
 ```
 
 ---
 
-### 3. Configure the backend
+### 3. Configure environment variables
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and set your values:
+
+```env
+POSTGRES_DB=sustainability_db
+POSTGRES_USER=your_postgres_user
+POSTGRES_PASSWORD=your_postgres_password
+
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/sustainability_db
+SPRING_DATASOURCE_USERNAME=your_postgres_user
+SPRING_DATASOURCE_PASSWORD=your_postgres_password
+
+JWT_SECRET=your_jwt_secret        # generate with: openssl rand -hex 32
+JWT_EXPIRATION_MS=86400000
+
+CORS_ALLOWED_ORIGINS=http://localhost:5173
+```
+
+> **Tip:** Generate a JWT secret with `openssl rand -hex 32`
+
+---
+
+### 4. Configure the backend
 
 ```bash
 cp backend/src/main/resources/application.properties.example \
@@ -154,12 +183,10 @@ cp backend/src/main/resources/application.properties.example \
 Edit `application.properties` and set:
 
 ```properties
-spring.datasource.username=YOUR_POSTGRES_USER
-spring.datasource.password=YOUR_POSTGRES_PASSWORD
-jwt.secret=REPLACE_WITH_A_64_CHAR_HEX_STRING
+spring.datasource.username=your_postgres_user
+spring.datasource.password=your_postgres_password
+jwt.secret=your_jwt_secret
 ```
-
-> **Tip:** Generate a JWT secret with `openssl rand -hex 32`
 
 ---
 
@@ -269,18 +296,21 @@ Composite = Environmental × 0.50 + Social × 0.30 + Governance × 0.20
 
 ## Environment Variables Reference
 
-### Backend (`application.properties`)
+Copy `.env.example` to `.env` and fill in your values — this file is used by both Docker Compose and local development.
 
 | Key | Description |
 |-----|-------------|
-| `spring.datasource.url` | JDBC URL for PostgreSQL |
-| `spring.datasource.username` | Database user |
-| `spring.datasource.password` | Database password |
-| `jwt.secret` | HS256 signing key (min 64 hex chars) |
-| `jwt.expiration-ms` | Token TTL in ms (default: 86400000 = 24h) |
-| `cors.allowed-origins` | Comma-separated allowed origins |
+| `POSTGRES_DB` | PostgreSQL database name |
+| `POSTGRES_USER` | PostgreSQL username |
+| `POSTGRES_PASSWORD` | PostgreSQL password |
+| `SPRING_DATASOURCE_URL` | JDBC URL (use `localhost:5432` for local, `db:5432` for Docker) |
+| `SPRING_DATASOURCE_USERNAME` | Database username |
+| `SPRING_DATASOURCE_PASSWORD` | Database password |
+| `JWT_SECRET` | HS256 signing key — generate with `openssl rand -hex 32` |
+| `JWT_EXPIRATION_MS` | Token TTL in ms (default: 86400000 = 24h) |
+| `CORS_ALLOWED_ORIGINS` | Comma-separated allowed origins |
 
-### Frontend (`.env`)
+### Frontend (`frontend/.env`)
 
 | Key | Description |
 |-----|-------------|
@@ -298,8 +328,9 @@ The easiest way to run the full stack locally or in production is with Docker Co
 git clone https://github.com/2025sl93031-ShubhamSain/SustainRank-ESG-Intelligence-Platform.git
 cd SustainRank-ESG-Intelligence-Platform
 
-# 2. (Optional) Set a strong JWT secret
-export JWT_SECRET=$(openssl rand -hex 32)
+# 2. Set up environment variables
+cp .env.example .env
+# Edit .env and fill in your values (DB password, JWT secret, etc.)
 
 # 3. Start all services (PostgreSQL + backend + frontend)
 docker compose up --build
