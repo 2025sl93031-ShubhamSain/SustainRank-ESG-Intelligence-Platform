@@ -1,0 +1,54 @@
+# ── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── IDE ──────────────────────────────────────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ── Secrets & credentials ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+secrets.*
+credentials.*
+
+# ── Frontend (Vite + React) ───────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/.env.production
+frontend/.env.staging
+
+# ── Backend (Spring Boot / Maven) ────────────────────────────────────────────
+backend/target/
+backend/*.jar
+backend/*.war
+backend/src/main/resources/application.properties
+
+# ── Database ─────────────────────────────────────────────────────────────────
+*.sql.bak
+*.dump
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Docker ───────────────────────────────────────────────────────────────────
+docker-compose.override.yml
