@@ -1,0 +1,30 @@
+# Copy this file to application.properties and fill in your values.
+# Never commit application.properties — it is in .gitignore.
+
+server.port=8000
+
+# ── PostgreSQL ────────────────────────────────────────────────────────────────
+spring.datasource.url=jdbc:postgresql://localhost:5432/sustainability_db
+spring.datasource.username=YOUR_DB_USERNAME
+spring.datasource.password=YOUR_DB_PASSWORD
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# ── JPA / Hibernate ───────────────────────────────────────────────────────────
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.show-sql=false
+
+# ── Jackson ───────────────────────────────────────────────────────────────────
+spring.jackson.serialization.write-dates-as-timestamps=false
+
+# ── JWT ───────────────────────────────────────────────────────────────────────
+# Generate a strong random hex string (min 64 chars) for production.
+jwt.secret=REPLACE_WITH_A_LONG_RANDOM_HEX_SECRET
+jwt.expiration-ms=86400000
+
+# ── CORS ──────────────────────────────────────────────────────────────────────
+# Comma-separated list of allowed origins. For local dev: http://localhost:5173
+cors.allowed-origins=http://localhost:5173
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+logging.level.com.sustainability=INFO
