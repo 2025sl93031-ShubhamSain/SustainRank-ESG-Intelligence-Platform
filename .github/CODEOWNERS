@@ -1,0 +1,20 @@
+# CODEOWNERS
+# Owners are automatically requested for review on every PR that touches their paths.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global default — all files
+*                        @2025sl93031-ShubhamSain @2025sl93003-shatakshi @2025sl93001bits
+
+# Backend
+/backend/                @2025sl93031-ShubhamSain @2025sl93003-shatakshi @2025sl93001bits
+
+# Frontend
+/frontend/               @2025sl93031-ShubhamSain @2025sl93003-shatakshi @2025sl93001bits
+
+# CI & GitHub config
+/.github/                @2025sl93031-ShubhamSain @2025sl93003-shatakshi @2025sl93001bits
+
+# Security & legal
+/SECURITY.md             @2025sl93031-ShubhamSain @2025sl93003-shatakshi @2025sl93001bits
+/CLA.md                  @2025sl93031-ShubhamSain @2025sl93003-shatakshi @2025sl93001bits
+/LICENSE                 @2025sl93031-ShubhamSain @2025sl93003-shatakshi @2025sl93001bits
