@@ -83,7 +83,8 @@ Before submitting a PR, make sure:
 - [ ] The app runs locally without errors
 - [ ] Frontend: `npm run lint` passes in the `frontend/` directory
 - [ ] Backend: `mvn compile` succeeds in the `backend/` directory
-- [ ] No secrets, credentials, or `application.properties` committed
+- [ ] Backend: `mvn test` passes — all unit tests green
+- [ ] No secrets, credentials, AI API keys, or `application.properties` committed
 - [ ] PR description explains **what** changed and **why**
 - [ ] Screenshots attached for any UI changes
 
