@@ -3077,9 +3077,6 @@ section,
   border-radius: 4px;
 }
 
-/* Recent Changes panel */
-.db-changes {
-
 .db-changes__header {
   display: flex;
   align-items: center;
