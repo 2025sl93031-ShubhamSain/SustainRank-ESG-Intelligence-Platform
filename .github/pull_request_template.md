@@ -17,7 +17,9 @@ Closes #<!-- issue number -->
 - [ ] App runs locally without errors
 - [ ] `npm run lint` passes in `frontend/`
 - [ ] `mvn compile` succeeds in `backend/`
-- [ ] No secrets or `application.properties` committed
+- [ ] `mvn test` passes in `backend/`
+- [ ] No secrets, `application.properties`, or AI API keys committed
+- [ ] If AI feature touched: `ai.api-key` is not hardcoded anywhere in source
 - [ ] Screenshots attached for any UI changes
 - [ ] I have read [CONTRIBUTING.md](../CONTRIBUTING.md)
 

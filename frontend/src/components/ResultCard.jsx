@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom'
+import AiRecommendations from './AiRecommendations'
+import { getResultRecommendations } from '../api/ai'
 
 const CATEGORY_STYLES = {
   success: { bg: '#dcfce7', color: '#16a34a', bar: '#16a34a' },
@@ -44,13 +46,13 @@ function ScoreRing({ score, size = 160, stroke = 13 }) {
 export default function ResultCard({ result, backPath }) {
   const navigate = useNavigate()
   const {
-    heading, sub_heading, score, message, categories, suggestions,
+    heading, sub_heading, score, message, categories,
     show_breakdown, consumption_breakdown, show_waste_breakdown, waste_breakdown,
     show_temp, country_average, world_average,
+    type, industry,
   } = result
 
   const scoreNum = parseFloat(score)
-  const col      = scoreColor(scoreNum)
   const grad     = scoreGrad(scoreNum)
 
   const scoreLabel = !isNaN(scoreNum)
@@ -58,71 +60,39 @@ export default function ResultCard({ result, backPath }) {
     : 'Score'
 
   return (
-    <div style={{ display:'flex', width:'100%', height:'100%', overflow:'hidden' }}>
+    <div className="rc-layout">
 
       {/* ── LEFT: dark score panel ── */}
-      <div style={{
-        width: '380px', flexShrink: 0,
-        background: grad,
-        display: 'flex', flexDirection: 'column',
-        padding: '44px 36px', position: 'relative', overflow: 'hidden',
-      }}>
-        <div style={{ position:'absolute', width:300, height:300, borderRadius:'50%', border:'1px solid rgba(255,255,255,0.07)', bottom:-80, right:-80, pointerEvents:'none' }} />
-        <div style={{ position:'absolute', width:180, height:180, borderRadius:'50%', border:'1px solid rgba(255,255,255,0.05)', top:40, right:-50, pointerEvents:'none' }} />
+      <div className="rc-left" style={{ background: grad }}>
+        <div className="rc-left__deco-lg" />
+        <div className="rc-left__deco-sm" />
 
-        {/* heading */}
-        <div style={{ marginBottom: 32, position:'relative' }}>
-          <div style={{ fontSize:'0.7rem', fontWeight:700, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:'1.5px', marginBottom:6 }}>
-            Result
-          </div>
-          <h2 style={{ fontSize:'1.3rem', fontWeight:900, color:'#fff', fontFamily:"'Raleway',sans-serif", lineHeight:1.25, margin:'0 0 6px' }}>
-            {heading}
-          </h2>
-          {sub_heading && (
-            <p style={{ fontSize:'0.78rem', color:'rgba(255,255,255,0.5)', margin:0, lineHeight:1.5 }}>{sub_heading}</p>
-          )}
+        <div className="rc-left__heading-wrap">
+          <div className="rc-left__label">Result</div>
+          <h2 className="rc-left__heading">{heading}</h2>
+          {sub_heading && <p className="rc-left__subheading">{sub_heading}</p>}
         </div>
 
-        {/* score ring */}
-        <div style={{ display:'flex', justifyContent:'center', marginBottom:16 }}>
+        <div className="rc-left__ring-wrap">
           <ScoreRing score={score} />
         </div>
 
-        {/* score label badge */}
-        <div style={{ textAlign:'center', marginBottom:24 }}>
-          <span style={{
-            display:'inline-block', background:'rgba(255,255,255,0.12)',
-            border:'1px solid rgba(255,255,255,0.2)', borderRadius:20,
-            padding:'4px 16px', fontSize:'0.72rem', fontWeight:800,
-            color:'#fff', textTransform:'uppercase', letterSpacing:'1.2px',
-          }}>{scoreLabel}</span>
+        <div className="rc-left__badge-wrap">
+          <span className="rc-left__score-badge">{scoreLabel}</span>
         </div>
 
-        {/* message */}
-        {message && (
-          <p style={{
-            fontSize:'0.82rem', color:'rgba(255,255,255,0.65)', lineHeight:1.6,
-            textAlign:'center', margin:'0 0 auto', background:'rgba(255,255,255,0.07)',
-            border:'1px solid rgba(255,255,255,0.1)', borderRadius:12, padding:'12px 16px',
-          }}>
-            {message}
-          </p>
-        )}
+        {message && <p className="rc-left__message">{message}</p>}
 
-        {/* comparison mini row */}
         {show_temp && (
-          <div style={{ marginTop:'auto', display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+          <div className="rc-left__comparison">
             {[
-              { label:'India Average', value:`${country_average} t`, icon:'bi-globe-asia-australia' },
-              { label:'World Target',  value:`${world_average} t`,   icon:'bi-bullseye' },
+              { label: 'India Average', value: `${country_average} t`, icon: 'bi-globe-asia-australia' },
+              { label: 'World Target',  value: `${world_average} t`,   icon: 'bi-bullseye' },
             ].map((item) => (
-              <div key={item.label} style={{
-                background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.1)',
-                borderRadius:12, padding:'12px', textAlign:'center',
-              }}>
-                <i className={`bi ${item.icon}`} style={{ color:'rgba(255,255,255,0.6)', fontSize:'1rem', marginBottom:4, display:'block' }}></i>
-                <div style={{ fontSize:'1.1rem', fontWeight:800, color:'#fff', fontFamily:"'Raleway',sans-serif" }}>{item.value}</div>
-                <div style={{ fontSize:'0.62rem', color:'rgba(255,255,255,0.4)', textTransform:'uppercase', letterSpacing:'0.7px', marginTop:2 }}>{item.label}</div>
+              <div key={item.label} className="rc-left__comparison-item">
+                <i className={`bi ${item.icon} rc-left__comparison-icon`}></i>
+                <div className="rc-left__comparison-value">{item.value}</div>
+                <div className="rc-left__comparison-label">{item.label}</div>
               </div>
             ))}
           </div>
@@ -130,24 +100,23 @@ export default function ResultCard({ result, backPath }) {
       </div>
 
       {/* ── RIGHT: details panel ── */}
-      <div style={{ flex:1, background:'#f8fafc', overflow:'auto', padding:'36px 44px', display:'flex', flexDirection:'column', gap:22 }}>
+      <div className="rc-right">
 
         {/* Score Ranges */}
         {categories && Object.keys(categories).length > 0 && (
           <div>
-            <div style={{ fontSize:'0.7rem', fontWeight:700, color:'#9ca3af', textTransform:'uppercase', letterSpacing:'1.2px', marginBottom:12 }}>Score Ranges</div>
-            <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
+            <div className="rc-section-label">Score Ranges</div>
+            <div className="rc-category-grid">
               {Object.entries(categories).map(([label, cat]) => {
                 const s = CATEGORY_STYLES[cat.color] || CATEGORY_STYLES.info
                 return (
-                  <div key={label} style={{
-                    flex:'1', minWidth:120, background:s.bg,
-                    borderRadius:14, padding:'20px 16px', textAlign:'center',
-                    border:`1px solid ${s.bg}`, minHeight:'80px',
-                    display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-                  }}>
-                    <div style={{ fontWeight:800, fontSize:'0.75rem', color:s.color, textTransform:'uppercase', letterSpacing:'0.8px', marginBottom:6 }}>{label}</div>
-                    <div style={{ fontSize:'0.82rem', color:s.color, opacity:0.85 }}>
+                  <div
+                    key={label}
+                    className="rc-category-item"
+                    style={{ background: s.bg, border: `1px solid ${s.bg}` }}
+                  >
+                    <div className="rc-category-item__label" style={{ color: s.color }}>{label}</div>
+                    <div className="rc-category-item__range" style={{ color: s.color }}>
                       {Array.isArray(cat.range) ? `${cat.range[0]} – ${cat.range[1]}` : cat.range}
                     </div>
                   </div>
@@ -160,16 +129,13 @@ export default function ResultCard({ result, backPath }) {
         {/* Consumption Breakdown */}
         {show_breakdown && consumption_breakdown && (
           <div>
-            <div style={{ fontSize:'0.7rem', fontWeight:700, color:'#9ca3af', textTransform:'uppercase', letterSpacing:'1.2px', marginBottom:12 }}>Consumption Breakdown</div>
-            <div style={{ background:'#fff', borderRadius:14, overflow:'hidden', boxShadow:'0 2px 8px rgba(0,0,0,0.05)', border:'1px solid #f1f5f9' }}>
-              {Object.entries(consumption_breakdown).map(([label, item], i, arr) => (
-                <div key={item.id} style={{
-                  display:'flex', justifyContent:'space-between', alignItems:'center',
-                  padding:'13px 18px', borderBottom: i < arr.length-1 ? '1px solid #f8fafc' : 'none',
-                }}>
-                  <span style={{ fontSize:'0.87rem', color:'#374151', fontWeight:500 }}>{label}</span>
-                  <span style={{ fontSize:'0.87rem', fontWeight:700, color:'#111827' }}>
-                    {item.value} <span style={{ color:'#9ca3af', fontWeight:400, fontSize:'0.78rem' }}>{item.unit}</span>
+            <div className="rc-section-label">Consumption Breakdown</div>
+            <div className="rc-breakdown-table">
+              {Object.entries(consumption_breakdown).map(([label, item]) => (
+                <div key={item.id} className="rc-breakdown-row">
+                  <span className="rc-breakdown-row__label">{label}</span>
+                  <span className="rc-breakdown-row__value">
+                    {item.value} <span className="rc-breakdown-row__unit">{item.unit}</span>
                   </span>
                 </div>
               ))}
@@ -180,16 +146,13 @@ export default function ResultCard({ result, backPath }) {
         {/* Waste Breakdown */}
         {show_waste_breakdown && waste_breakdown && (
           <div>
-            <div style={{ fontSize:'0.7rem', fontWeight:700, color:'#9ca3af', textTransform:'uppercase', letterSpacing:'1.2px', marginBottom:12 }}>Waste Breakdown</div>
-            <div style={{ background:'#fff', borderRadius:14, overflow:'hidden', boxShadow:'0 2px 8px rgba(0,0,0,0.05)', border:'1px solid #f1f5f9' }}>
-              {Object.entries(waste_breakdown).map(([label, item], i, arr) => (
-                <div key={item.id} style={{
-                  display:'flex', justifyContent:'space-between', alignItems:'center',
-                  padding:'13px 18px', borderBottom: i < arr.length-1 ? '1px solid #f8fafc' : 'none',
-                }}>
-                  <span style={{ fontSize:'0.87rem', color:'#374151', fontWeight:500 }}>{label}</span>
-                  <span style={{ fontSize:'0.87rem', fontWeight:700, color:'#111827' }}>
-                    {item.value} <span style={{ color:'#9ca3af', fontWeight:400, fontSize:'0.78rem' }}>{item.unit}</span>
+            <div className="rc-section-label">Waste Breakdown</div>
+            <div className="rc-breakdown-table">
+              {Object.entries(waste_breakdown).map(([label, item]) => (
+                <div key={item.id} className="rc-breakdown-row">
+                  <span className="rc-breakdown-row__label">{label}</span>
+                  <span className="rc-breakdown-row__value">
+                    {item.value} <span className="rc-breakdown-row__unit">{item.unit}</span>
                   </span>
                 </div>
               ))}
@@ -197,40 +160,15 @@ export default function ResultCard({ result, backPath }) {
           </div>
         )}
 
-        {/* Recommendations */}
-        {suggestions?.length > 0 && (
-          <div>
-            <div style={{ fontSize:'0.7rem', fontWeight:700, color:'#9ca3af', textTransform:'uppercase', letterSpacing:'1.2px', marginBottom:12 }}>Recommendations</div>
-            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-              {suggestions.map((s, i) => (
-                <div key={i} style={{
-                  display:'flex', alignItems:'flex-start', gap:10,
-                  background:'#fff', border:'1px solid #f1f5f9',
-                  borderRadius:12, padding:'12px 14px',
-                  boxShadow:'0 1px 4px rgba(0,0,0,0.04)',
-                }}>
-                  <i className="bi bi-check-circle-fill" style={{ color:'#16a34a', fontSize:'0.95rem', marginTop:2, flexShrink:0 }}></i>
-                  <span style={{ fontSize:'0.84rem', color:'#374151', lineHeight:1.55 }}>{s}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* AI Recommendations */}
+        <AiRecommendations
+          fetchFn={() => getResultRecommendations(type || 'sustainability', parseFloat(score), industry || 'general')}
+          deps={[score, type]}
+        />
 
-        {/* Recalculate button pinned to bottom */}
-        <div style={{ marginTop:'auto', paddingTop:8 }}>
-          <button
-            onClick={() => navigate(backPath || '/')}
-            style={{
-              width:'100%', padding:'13px 0', borderRadius:12,
-              background:'linear-gradient(135deg,#4361ee,#3f37c9)',
-              border:'none', color:'#fff', fontWeight:700, fontSize:'0.88rem',
-              letterSpacing:'0.5px', cursor:'pointer', transition:'all 0.2s',
-              boxShadow:'0 4px 16px rgba(67,97,238,0.35)',
-            }}
-            onMouseOver={e => e.currentTarget.style.transform='translateY(-1px)'}
-            onMouseOut={e => e.currentTarget.style.transform='translateY(0)'}
-          >
+        {/* Recalculate button */}
+        <div className="rc-recalc-wrap">
+          <button className="btn-primary-rc" onClick={() => navigate(backPath || '/')}>
             <i className="bi bi-arrow-repeat me-2"></i>Recalculate
           </button>
         </div>

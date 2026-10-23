@@ -28,3 +28,17 @@ cors.allowed-origins=http://localhost:5173
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 logging.level.com.sustainability=INFO
+
+# ── AI Recommendations ────────────────────────────────────────────────────────
+# Supported providers: openai | gemini | anthropic | ollama
+ai.provider=openai
+# Your API key (leave blank for ollama)
+ai.api-key=YOUR_AI_API_KEY
+# Model name — any model the provider supports
+#   openai:     gpt-4o, gpt-4o-mini
+#   gemini:     gemini-1.5-flash, gemini-1.5-pro
+#   anthropic:  claude-sonnet-4-6, claude-haiku-4-5-20251001
+#   ollama:     llama3, mistral
+ai.model=gpt-4o-mini
+# Optional: override base URL (required for ollama, e.g. http://localhost:11434)
+ai.base-url=

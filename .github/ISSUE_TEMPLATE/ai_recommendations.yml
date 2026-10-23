@@ -1,0 +1,90 @@
+name: AI Recommendations Issue
+description: Report a problem or suggest an improvement for the AI-powered ESG recommendations feature
+labels: [ai, enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for issues related to the AI-powered ESG recommendations feature — shown on calculator result pages and the dashboard.
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue type
+      options:
+        - Wrong or irrelevant recommendations
+        - Recommendations not showing (empty)
+        - Provider/API key not working
+        - New provider support request
+        - Recommendation quality improvement
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: location
+    attributes:
+      label: Where does the issue occur?
+      options:
+        - Calculator result page (carbon / energy / waste / eevta)
+        - ESG composite result page (AggResultPage)
+        - Dashboard
+        - All pages
+    validations:
+      required: true
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: AI provider configured
+      options:
+        - OpenAI
+        - OpenRouter
+        - Google Gemini
+        - Anthropic Claude
+        - Ollama (local)
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Model name
+      description: The value of ai.model in your application.properties (no API key)
+      placeholder: e.g. openai/gpt-4o-mini
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the issue
+      description: What did you expect to see? What actually happened?
+      placeholder: |
+        Expected: 3-5 relevant carbon reduction recommendations
+        Actual: Empty recommendations card / incorrect suggestions
+    validations:
+      required: true
+
+  - type: textarea
+    id: backend_log
+    attributes:
+      label: Backend log output
+      description: Paste any relevant lines from the Spring Boot log (search for "AI recommendation call failed")
+      render: shell
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Submit carbon calculator with score X
+        2. Navigate to result page
+        3. AI recommendations card shows...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots, curl responses, or anything else that helps diagnose the issue.
