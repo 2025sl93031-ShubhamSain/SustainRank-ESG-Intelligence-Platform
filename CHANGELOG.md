@@ -17,7 +17,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [2.0.0] — 2026-09-22
+## [1.1.0] — 2026-10-20
+
+### Added — AI-Powered ESG Recommendations
+- Provider-agnostic AI layer: `AiProvider` interface with `OpenAiProvider`, `GeminiProvider`, `AnthropicProvider` implementations
+- `AiProviderFactory` selects the correct impl from `ai.provider` config key — swap providers by changing one property, no code changes needed
+- Supports OpenAI, Google Gemini, Anthropic Claude, Ollama (local), and any OpenAI-compatible proxy (e.g. OpenRouter)
+- `POST /api/ai/result` — context-aware recommendations for each calculator result (score + type + industry)
+- `POST /api/ai/dashboard` — recommendations based on rank + all three ESG pillar scores
+- `AiRecommendations` reusable React component with loading spinner, graceful empty state, and bullet list
+- GitHub issue template for AI recommendations bug reports (`.github/ISSUE_TEMPLATE/ai_recommendations.yml`)
+
+### Changed
+- `ResultCard`, `AggResultPage`, `DashboardPage` wired to AI endpoints — old hardcoded suggestions removed
+- All Dashboard inline styles migrated to BEM CSS classes in `main.css`
+- `application.properties.example` updated with `ai.*` config block
+
+---
+
+## [1.0.0] — 2026-09-22
 
 ### Changed — Backend Migration (Django → Spring Boot)
 - Replaced Django REST Framework backend with Spring Boot 3.3.5 + Java 21
@@ -40,19 +58,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dashboard: light mode, full-width layout, trophy badges for top 3, INDUSTRY in uppercase, change badges with real deltas, formatted date
 - Navbar: scroll-aware frosted glass, active state highlighting, user chip, mobile drawer
 
----
-
-## [1.0.0] — 2025-04-05
-
-### Added
-- Initial release with Django REST Framework backend
-- React + Vite frontend with Bootstrap template styling
-- Carbon emission calculator (GHG Protocol)
-- Energy consumption calculator (ISO 50001)
-- Waste management calculator (GRI 306)
-- Workforce development scorer (SDG 8 / EEVTA)
-- Sustainability composite score (ESG weighted average)
-- Dashboard with radar chart and peer rankings
-- History page (last 20 calculations)
-- Session-based authentication with CSRF protection
-- 17 SDG goal index page

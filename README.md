@@ -37,6 +37,7 @@ SustainRank lets organisations measure, benchmark and improve their ESG (Environ
 - **Workforce (EEVTA) Calculator** — Training, retention, benefits, gender equity, disability inclusion
 - **Sustainability Score** — ESG composite (Environmental 50% · Social 30% · Governance 20%) with blended ROI
 - **ESG Dashboard** — Live peer rankings, radar chart, change-vs-last-run metrics
+- **AI Recommendations** — Context-aware ESG improvement suggestions on every result page and the dashboard; provider-agnostic (OpenAI, Gemini, Anthropic, Ollama, OpenRouter)
 - **History** — Last 20 calculation runs per organisation
 - **JWT Authentication** — Stateless, secure, no cookies required
 - **17 SDG Goal Index** — Interactive cards linking to UN documentation
@@ -62,7 +63,7 @@ SustainRank lets organisations measure, benchmark and improve their ESG (Environ
 | HTTP | Axios (JWT Bearer interceptor) |
 | Charts | Chart.js 4 + react-chartjs-2 |
 | Icons | Bootstrap Icons 1.13 |
-| Styling | Inline styles (zero CSS-class dependencies) |
+| Styling | BEM CSS classes in `main.css` |
 
 ---
 
@@ -73,6 +74,7 @@ SustainRank-ESG-Intelligence-Platform/
 ├── backend/                          # Spring Boot REST API
 │   ├── pom.xml
 │   └── src/main/java/com/sustainability/
+│       ├── ai/                       # AI recommendations (provider-agnostic)
 │       ├── config/                   # SecurityConfig, JwtConfig
 │       ├── controller/               # AuthController, CalculatorController, DashboardController, …
 │       ├── dto/                      # Request/Response DTOs
@@ -89,8 +91,8 @@ SustainRank-ESG-Intelligence-Platform/
 │   ├── vite.config.js                # Vite dev proxy → localhost:8000
 │   ├── .env.example                  # ← copy to .env
 │   └── src/
-│       ├── api/                      # axiosInstance, auth.js, dashboard.js
-│       ├── components/               # Header, Footer
+│       ├── api/                      # axiosInstance, auth.js, dashboard.js, ai.js
+│       ├── components/               # Header, Footer, AiRecommendations
 │       ├── context/                  # AuthContext (JWT localStorage)
 │       └── pages/                    # IndexPage, LoginPage, RegisterPage, DashboardPage, …
 │
@@ -188,6 +190,17 @@ spring.datasource.password=your_postgres_password
 jwt.secret=your_jwt_secret
 ```
 
+**Optional — enable AI recommendations:**
+
+```properties
+ai.provider=openai          # openai | gemini | anthropic | ollama
+ai.api-key=sk-...           # omit for Ollama
+ai.model=gpt-4o-mini
+ai.base-url=                # optional, e.g. https://openrouter.ai/api for OpenRouter
+```
+
+> If `ai.api-key` is not set or the provider is unreachable, the UI shows "Recommendations unavailable" instead of crashing.
+
 ---
 
 ### 4. Start the backend
@@ -259,6 +272,8 @@ Go to `http://localhost:5173/register` and create your organisation account, the
 | POST | `/api/sustainability/` | JWT | Full ESG composite score |
 | GET | `/api/dashboard/` | JWT | Rankings, radar data, change metrics |
 | GET | `/api/history/` | JWT | Last 20 calculation history entries |
+| POST | `/api/ai/result` | JWT | AI recommendations for a calculator result |
+| POST | `/api/ai/dashboard` | JWT | AI recommendations based on rank + ESG scores |
 
 ---
 
@@ -309,6 +324,10 @@ Copy `.env.example` to `.env` and fill in your values — this file is used by b
 | `JWT_SECRET` | HS256 signing key — generate with `openssl rand -hex 32` |
 | `JWT_EXPIRATION_MS` | Token TTL in ms (default: 86400000 = 24h) |
 | `CORS_ALLOWED_ORIGINS` | Comma-separated allowed origins |
+| `AI_PROVIDER` | AI provider: `openai` \| `gemini` \| `anthropic` \| `ollama` |
+| `AI_API_KEY` | API key for the chosen provider (omit for Ollama) |
+| `AI_MODEL` | Model name e.g. `gpt-4o-mini`, `gemini-1.5-flash`, `claude-haiku-4-5` |
+| `AI_BASE_URL` | Optional base URL override (e.g. `http://localhost:11434` for Ollama or an OpenRouter endpoint) |
 
 ### Frontend (`frontend/.env`)
 
