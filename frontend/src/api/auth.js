@@ -1,8 +1,12 @@
 import api from './axiosInstance'
 
 export async function loginUser(username, password) {
-  const res = await api.post('/login/', { username, password })
-  return res.data
+  try {
+    const res = await api.post('/login/', { username, password })
+    return res.data
+  } catch (err) {
+    return err?.response?.data ?? { success: false, error: 'Invalid username or password.' }
+  }
 }
 
 export async function registerUser(data) {
