@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { label: 'Calculators', href: '/#services',type: 'anchor' },
   { label: 'SDG Goals',   href: '/#portfolio',type: 'anchor' },
   { label: 'Contact',     href: '/#contact', type: 'anchor' },
+  { label: 'Dashboard',   to: '/dashboard',  type: 'link' },
   { label: 'History',     to: '/history',    type: 'link' },
 ]
 
