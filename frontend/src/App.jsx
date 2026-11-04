@@ -14,6 +14,7 @@ import FormResultPage from './pages/FormResultPage'
 import AggResultPage from './pages/AggResultPage'
 import DashboardPage from './pages/DashboardPage'
 import HistoryPage from './pages/HistoryPage'
+import ProfilePage from './pages/ProfilePage'
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/result/sustainability" element={<AggResultPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/history" element={<HistoryPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
