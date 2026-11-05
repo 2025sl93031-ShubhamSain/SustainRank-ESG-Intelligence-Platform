@@ -27,7 +27,10 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => setMobileOpen(false), [location])
+  useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
+    setMobileOpen(false)
+  }, [location])
 
   async function handleLogout() {
     setShowLogoutModal(true)
@@ -256,13 +259,13 @@ export default function Header() {
               textDecoration: 'none', transition: 'all 0.15s',
             }
             return item.type === 'link' ? (
-              <Link key={item.label} to={item.to} style={style}>{item.label}</Link>
+              <Link key={item.label} to={item.to} style={style} onClick={() => setMobileOpen(false)}>{item.label}</Link>
             ) : (
-              <a key={item.label} href={item.href} style={style}>{item.label}</a>
+              <a key={item.label} href={item.href} style={style} onClick={() => setMobileOpen(false)}>{item.label}</a>
             )
           })}
           {user?.role === 'ADMIN' && (
-            <Link to="/leaderboard" style={{
+            <Link to="/leaderboard" onClick={() => setMobileOpen(false)} style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '10px 14px', borderRadius: 9,
               fontSize: '0.9rem', fontWeight: location.pathname === '/leaderboard' ? 700 : 500,
@@ -285,7 +288,7 @@ export default function Header() {
                 </div>
                 <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#fff' }}>{user.username}</span>
               </div>
-              <Link to="/profile" style={{
+              <Link to="/profile" onClick={() => setMobileOpen(false)} style={{
                 display: 'flex', alignItems: 'center', gap: 10,
                 padding: '10px 14px', borderRadius: 9,
                 background: location.pathname === '/profile' ? 'rgba(67,97,238,0.2)' : 'transparent',
@@ -305,13 +308,13 @@ export default function Header() {
             </>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
-              <Link to="/login" style={{
+              <Link to="/login" onClick={() => setMobileOpen(false)} style={{
                 display: 'block', textAlign: 'center', padding: '11px',
                 borderRadius: 9, border: '1px solid rgba(255,255,255,0.2)',
                 color: '#fff', fontSize: '0.9rem', fontWeight: 600,
                 textDecoration: 'none', background: 'transparent',
               }}>Sign In</Link>
-              <Link to="/register" style={{
+              <Link to="/register" onClick={() => setMobileOpen(false)} style={{
                 display: 'block', textAlign: 'center', padding: '11px',
                 borderRadius: 9, border: 'none',
                 background: 'linear-gradient(135deg,#4361ee,#3f37c9)',
