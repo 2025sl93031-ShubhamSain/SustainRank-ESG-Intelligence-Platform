@@ -127,12 +127,17 @@ export default function Header() {
 
             {user ? (
               <>
-                {/* User chip */}
+                {/* User chip — links to profile */}
+                <Link to="/profile" style={{ textDecoration: 'none' }} className="d-none d-xl-flex">
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 8,
                   background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)',
-                  borderRadius: 8, padding: '6px 12px',
-                }} className="d-none d-xl-flex">
+                  borderRadius: 8, padding: '6px 12px', cursor: 'pointer',
+                  transition: 'background 0.18s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.13)'}
+                  onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.07)'}
+                >
                   <div style={{
                     width: 26, height: 26, borderRadius: 6,
                     background: 'linear-gradient(135deg,#4361ee,#8b5cf6)',
@@ -142,6 +147,7 @@ export default function Header() {
                   </div>
                   <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fff' }}>{user.username}</span>
                 </div>
+                </Link>
 
                 <button
                   onClick={handleLogout}
@@ -244,6 +250,15 @@ export default function Header() {
                 </div>
                 <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#fff' }}>{user.username}</span>
               </div>
+              <Link to="/profile" style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '10px 14px', borderRadius: 9,
+                background: location.pathname === '/profile' ? 'rgba(67,97,238,0.2)' : 'transparent',
+                border: location.pathname === '/profile' ? '1px solid rgba(67,97,238,0.35)' : '1px solid transparent',
+                color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none',
+              }}>
+                <i className="bi bi-building" style={{ fontSize: '0.85rem' }} /> Company Profile
+              </Link>
               <button onClick={handleLogout} style={{
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '10px 14px', borderRadius: 9,
