@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
-import { getHistory } from '../api/history'
+import { getHistory, deleteHistory } from '../api/history'
 
 function scoreColor(val) {
   if (val == null || isNaN(+val)) return '#9ca3af'
@@ -48,6 +48,22 @@ export default function HistoryPage() {
   const [pendingMin, setPendingMin] = useState('')
   const [pendingMax, setPendingMax] = useState('')
   const [filtersOpen, setFiltersOpen] = useState(false)
+
+  const [deletingId, setDeletingId] = useState(null)
+  const [confirmId, setConfirmId] = useState(null)
+
+  async function handleDelete(id) {
+    setConfirmId(null)
+    setDeletingId(id)
+    try {
+      await deleteHistory(id)
+      setHistories(prev => prev.filter(h => h.id !== id))
+    } catch {
+      alert('Failed to delete record. Please try again.')
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   const METRIC_OPTS = [
     { col: 'carbon_emissions',    label: 'Carbon (tCO₂)' },
@@ -340,7 +356,7 @@ export default function HistoryPage() {
                   { label: 'Avg ROI',            value: avgRoi ?? '—',                               suffix: '%', icon: 'bi-graph-up-arrow', color: scoreColor(avgRoi),  bg: scoreBg(avgRoi) },
                 ].map((card) => (
                   <div key={card.label} className="hp-stat-card">
-                    <div className="hp-stat-card__icon" style={{ background: card.bg }}>
+                    <div className="hp-stat-card__icon hp-stat-card__icon-dynamic" style={{ background: card.bg }}>
                       <i className={`bi ${card.icon}`} style={{ color: card.color }}></i>
                     </div>
                     <div>
@@ -372,6 +388,7 @@ export default function HistoryPage() {
                             <SortIcon col={col.key} sortCol={sortCol} sortDir={sortDir} />
                           </th>
                         ))}
+                        <th className="hp-table__th--action"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -394,6 +411,16 @@ export default function HistoryPage() {
                             <td><MetricBadge value={h.cost_benefit} suffix="%" /></td>
                             <td><MetricBadge value={h.sustainability_score} /></td>
                             <td><MetricBadge value={h.roi} suffix="%" /></td>
+                            <td>
+                              <button
+                                onClick={() => setConfirmId(h.id)}
+                                disabled={deletingId === h.id}
+                                title="Delete record"
+                                className="hp-delete-btn"
+                              >
+                                <i className={`bi ${deletingId === h.id ? 'bi-hourglass-split' : 'bi-trash'}`}></i>
+                              </button>
+                            </td>
                           </tr>
                         )
                       })}
@@ -417,6 +444,37 @@ export default function HistoryPage() {
           )}
         </div>
       </div>
+
+      {/* ── Delete confirmation modal ── */}
+      {confirmId !== null && (
+        <div className="hp-modal-backdrop" onClick={() => setConfirmId(null)}>
+          <div className="hp-modal" onClick={e => e.stopPropagation()}>
+
+            <div className="hp-modal__icon-wrap">
+              <div className="hp-modal__icon">
+                <i className="bi bi-trash3-fill"></i>
+              </div>
+            </div>
+
+            <div className="hp-modal__text">
+              <h3 className="hp-modal__title">Delete this record?</h3>
+              <p className="hp-modal__desc">
+                This calculation entry will be permanently removed and cannot be recovered.
+              </p>
+            </div>
+
+            <div className="hp-modal__actions">
+              <button className="hp-modal__btn--cancel" onClick={() => setConfirmId(null)}>
+                Cancel
+              </button>
+              <button className="hp-modal__btn--delete" onClick={() => handleDelete(confirmId)}>
+                <i className="bi bi-trash3 me-2"></i>Delete
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   )
 }

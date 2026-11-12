@@ -3,6 +3,7 @@ package com.sustainability.controller;
 import com.sustainability.entity.AppUser;
 import com.sustainability.repository.UserRepository;
 import com.sustainability.service.HistoryService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,5 +27,12 @@ public class HistoryController {
     public ResponseEntity<Map<String, Object>> history(@AuthenticationPrincipal UserDetails ud) {
         AppUser user = userRepository.findByUsername(ud.getUsername()).orElseThrow();
         return ResponseEntity.ok(historyService.getHistory(user));
+    }
+
+    @DeleteMapping("/history/{id}/")
+    public ResponseEntity<Void> deleteHistory(@PathVariable Long id,
+                                               @AuthenticationPrincipal UserDetails ud) {
+        historyService.deleteById(id, ud.getUsername());
+        return ResponseEntity.noContent().build();
     }
 }

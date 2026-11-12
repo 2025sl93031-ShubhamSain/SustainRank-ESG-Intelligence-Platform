@@ -3,8 +3,10 @@ package com.sustainability.service;
 import com.sustainability.entity.AppUser;
 import com.sustainability.entity.CalculationHistory;
 import com.sustainability.repository.CalculationHistoryRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -48,6 +50,16 @@ public class HistoryService {
             List<Long> toDelete = allIds.subList(20, allIds.size());
             historyRepository.deleteByIdIn(toDelete);
         }
+    }
+
+    @Transactional
+    public void deleteById(Long id, String username) {
+        CalculationHistory record = historyRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!record.getUser().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        historyRepository.deleteById(id);
     }
 
     public Map<String, Object> getHistory(AppUser user) {
