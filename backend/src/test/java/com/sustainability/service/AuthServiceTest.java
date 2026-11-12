@@ -68,27 +68,35 @@ class AuthServiceTest {
     void register_validRequest_returnsSuccess() {
         when(userRepository.existsByUsername("newUser")).thenReturn(false);
         when(userRepository.existsByEmail("new@test.com")).thenReturn(false);
-        when(passwordEncoder.encode("pass123")).thenReturn("hashed");
+        when(passwordEncoder.encode("password123")).thenReturn("hashed");
         when(userRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
         when(profileService.getOrCreateProfile(any())).thenReturn(profile);
         when(profileService.saveProfile(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        Map<String, Object> result = authService.register(reg("Acme Corp", "newUser", "new@test.com", "pass123", "pass123"));
+        Map<String, Object> result = authService.register(reg("Acme Corp", "newUser", "new@test.com", "password123", "password123"));
 
         assertThat(result).containsEntry("success", true);
     }
 
     @Test
     void register_missingField_returnsError() {
-        Map<String, Object> result = authService.register(reg("Acme Corp", "", "new@test.com", "pass123", "pass123"));
+        Map<String, Object> result = authService.register(reg("Acme Corp", "", "new@test.com", "password123", "password123"));
 
         assertThat(result).containsEntry("success", false)
                           .containsKey("error");
     }
 
     @Test
+    void register_passwordTooShort_returnsError() {
+        Map<String, Object> result = authService.register(reg("Acme Corp", "user1", "u@test.com", "short", "short"));
+
+        assertThat(result).containsEntry("success", false)
+                          .containsEntry("error", "Password must be at least 8 characters.");
+    }
+
+    @Test
     void register_passwordMismatch_returnsError() {
-        Map<String, Object> result = authService.register(reg("Acme Corp", "user1", "u@test.com", "abc", "xyz"));
+        Map<String, Object> result = authService.register(reg("Acme Corp", "user1", "u@test.com", "password123", "different123"));
 
         assertThat(result).containsEntry("success", false)
                           .containsEntry("error", "Passwords don't match.");
@@ -98,7 +106,7 @@ class AuthServiceTest {
     void register_duplicateUsername_returnsError() {
         when(userRepository.existsByUsername("taken")).thenReturn(true);
 
-        Map<String, Object> result = authService.register(reg("Corp", "taken", "new@test.com", "pass", "pass"));
+        Map<String, Object> result = authService.register(reg("Corp", "taken", "new@test.com", "password123", "password123"));
 
         assertThat(result).containsEntry("success", false)
                           .containsEntry("error", "Username already exists.");
@@ -109,7 +117,7 @@ class AuthServiceTest {
         when(userRepository.existsByUsername("user2")).thenReturn(false);
         when(userRepository.existsByEmail("dup@test.com")).thenReturn(true);
 
-        Map<String, Object> result = authService.register(reg("Corp", "user2", "dup@test.com", "pass", "pass"));
+        Map<String, Object> result = authService.register(reg("Corp", "user2", "dup@test.com", "password123", "password123"));
 
         assertThat(result).containsEntry("success", false)
                           .containsEntry("error", "Email is already registered.");
@@ -119,12 +127,12 @@ class AuthServiceTest {
     void register_successfullySavesUser() {
         when(userRepository.existsByUsername("u3")).thenReturn(false);
         when(userRepository.existsByEmail("u3@test.com")).thenReturn(false);
-        when(passwordEncoder.encode("pw")).thenReturn("hashed");
+        when(passwordEncoder.encode("password123")).thenReturn("hashed");
         when(userRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
         when(profileService.getOrCreateProfile(any())).thenReturn(profile);
         when(profileService.saveProfile(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        authService.register(reg("Co", "u3", "u3@test.com", "pw", "pw"));
+        authService.register(reg("Co", "u3", "u3@test.com", "password123", "password123"));
 
         verify(userRepository).save(argThat(u ->
             "u3".equals(((AppUser) u).getUsername()) && "hashed".equals(((AppUser) u).getPassword())));

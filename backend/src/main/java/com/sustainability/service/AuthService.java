@@ -52,9 +52,14 @@ public class AuthService {
         if (req.company_name() == null || req.username() == null || req.email() == null
             || req.password1() == null || req.password2() == null
             || req.company_name().isBlank() || req.username().isBlank()
-            || req.email().isBlank() || req.password1().isBlank()) {
+            || req.email().isBlank() || req.password1().isBlank() || req.password2().isBlank()) {
             err.put("success", false);
             err.put("error", "All fields are required.");
+            return err;
+        }
+        if (req.password1().length() < 8) {
+            err.put("success", false);
+            err.put("error", "Password must be at least 8 characters.");
             return err;
         }
         if (!req.password1().equals(req.password2())) {
