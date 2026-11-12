@@ -191,7 +191,7 @@ export default function IndexPage() {
 
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
               {[
-                { icon:'bi-shield-check-fill', color:'#4361ee', bg:'rgba(67,97,238,0.06)', title:'GHG Protocol', sub:'Carbon accounting standard' },
+                { icon:'bi-shield-check', color:'#4361ee', bg:'rgba(67,97,238,0.06)', title:'GHG Protocol', sub:'Carbon accounting standard' },
                 { icon:'bi-lightning-fill',    color:'#f59e0b', bg:'rgba(245,158,11,0.06)', title:'ISO 50001',    sub:'Energy management' },
                 { icon:'bi-recycle',           color:'#10b981', bg:'rgba(16,185,129,0.06)', title:'GRI 306',      sub:'Waste disclosures' },
                 { icon:'bi-briefcase-fill',    color:'#8b5cf6', bg:'rgba(139,92,246,0.06)', title:'SDG 8',        sub:'Decent work & growth' },
