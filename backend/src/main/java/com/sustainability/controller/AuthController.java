@@ -3,6 +3,7 @@ package com.sustainability.controller;
 import com.sustainability.dto.LoginRequest;
 import com.sustainability.dto.RegisterRequest;
 import com.sustainability.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +54,8 @@ public class AuthController {
 
     @PostMapping(value = "/register/",
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ResponseEntity<Map<String, Object>> register(@RequestBody(required = false) RegisterRequest jsonReq,
-                                                         @ModelAttribute RegisterRequest formReq) {
+    public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody(required = false) RegisterRequest jsonReq,
+                                                         @Valid @ModelAttribute RegisterRequest formReq) {
         RegisterRequest req = jsonReq != null ? jsonReq : formReq;
         Map<String, Object> result = authService.register(req);
         boolean success = Boolean.TRUE.equals(result.get("success"));
