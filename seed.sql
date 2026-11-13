@@ -3,6 +3,9 @@
 -- =============================================================================
 -- Populates the database with demo users for local development and testing.
 --
+-- ⚠️  DEMO ONLY — these passwords are intentionally weak and publicly known.
+--     Never use this seed file in a production environment.
+--
 -- All demo accounts share the password:  demo123
 -- The testuser account uses password:    test123
 --
