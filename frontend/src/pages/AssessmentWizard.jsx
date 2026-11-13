@@ -69,30 +69,30 @@ export default function AssessmentWizard() {
   const [error, setError] = useState('')
 
   // ── form state ──────────────────────────────────────────────────────────────
-  const [org, setOrg] = useState({ industry: 'Manufacturing', num_employees: '250' })
+  const [org, setOrg] = useState({ industry: 'General', num_employees: '' })
 
   const [carbon, setCarbon] = useState({
-    elec: '5000', renewable_pct: '20', gas: '2000', vefeul: '500', machine: '100',
-    flights_short: '10', flights_long: '5', transexp: '1000',
-    newspaper: 'yes', alumtin: 'yes',
+    elec: '', renewable_pct: '', gas: '', vefeul: '', machine: '',
+    flights_short: '', flights_long: '', transexp: '',
+    newspaper: 'no', alumtin: 'no',
   })
 
   const [energy, setEnergy] = useState({
-    monthlyElectricity: '5000', renewablePercentage: '20',
-    vehicleFuel: '300', fuelType: 'petrol', heatingFuel: '1000', waterConsumption: '50',
+    monthlyElectricity: '', renewablePercentage: '',
+    vehicleFuel: '', fuelType: 'petrol', heatingFuel: '', waterConsumption: '',
   })
 
   const [waste, setWaste] = useState({
-    swaste: '500', owaste: '100', ewaste: '20', hwaste: '10', rcycwaste: '200', composted: '50',
+    swaste: '', owaste: '', ewaste: '', hwaste: '', rcycwaste: '', composted: '',
   })
 
   const [social, setSocial] = useState({
-    totalStudents: '250', techVocStudents: '50', distanceLearning: '30',
-    scholarshipStudents: '10', financialAid: '5', gradRate: '85',
-    employmentRate: '90', femaleEnrolment: '45', disabilityAccess: 'yes',
+    totalStudents: '', techVocStudents: '', distanceLearning: '',
+    scholarshipStudents: '', financialAid: '', gradRate: '',
+    employmentRate: '', femaleEnrolment: '', disabilityAccess: 'yes',
   })
 
-  const [finance, setFinance] = useState({ revenue: '1000000', cost: '800000', inv: '50000' })
+  const [finance, setFinance] = useState({ revenue: '', cost: '', inv: '' })
 
   // ── helpers ─────────────────────────────────────────────────────────────────
   const c = (setter) => (field) => (e) => {
