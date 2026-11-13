@@ -23,6 +23,12 @@ Be respectful and constructive. We follow the [Contributor Covenant](https://www
 
 ---
 
+## Contributor License Agreement
+
+By submitting a pull request you agree to the terms of the [Contributor License Agreement](./CLA.md). Please read it before contributing.
+
+---
+
 ## Getting Started
 
 1. **Fork** the repository and clone your fork.
