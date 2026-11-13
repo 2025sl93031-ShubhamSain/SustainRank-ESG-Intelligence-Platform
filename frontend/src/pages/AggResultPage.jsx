@@ -42,12 +42,13 @@ export default function AggResultPage() {
   const navigate = useNavigate()
 
   if (!state?.result) {
-    navigate('/sustainability')
+    navigate('/assessment')
     return null
   }
 
   const { sustainability_score, roi, cost_benefit, heading, sub_heading,
           environmental_score, social_score, governance_score, financial_roi } = state.result
+  const industry = state.industry || 'general'
 
   const susColor = scoreColor(sustainability_score)
   const roiColor = scoreColor(roi)
@@ -171,7 +172,7 @@ export default function AggResultPage() {
 
           {/* AI Recommendations */}
           <AiRecommendations
-            fetchFn={() => getResultRecommendations('sustainability', sustainability_score, 'general', {
+            fetchFn={() => getResultRecommendations('sustainability', sustainability_score, industry, {
               environmental: environmental_score, social: social_score, governance: governance_score,
             })}
             deps={[sustainability_score]}

@@ -1,16 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import { calculateSustainability } from '../api/calculators'
-import { getProfile } from '../api/auth'
 
 const STEPS = [
-  { label: 'Carbon', sub: 'Industry and carbon emissions data' },
-  { label: 'Energy', sub: 'Total energy usage in kWh' },
-  { label: 'Waste', sub: 'Total waste produced in kg' },
+  { label: 'Carbon',       sub: 'Industry and carbon emissions data' },
+  { label: 'Energy',       sub: 'Total energy usage in kWh' },
+  { label: 'Waste',        sub: 'Total waste produced in kg' },
   { label: 'Social Score', sub: 'Workforce Development Score (0–100)' },
-  { label: 'Revenue', sub: 'Revenue and operational costs' },
-  { label: 'Investment', sub: 'Total investment amount' },
+  { label: 'Revenue',      sub: 'Revenue and operational costs' },
+  { label: 'Investment',   sub: 'Total investment amount' },
 ]
 
 export default function SustainabilityPage() {
@@ -23,22 +22,8 @@ export default function SustainabilityPage() {
     evtaa: '', revenue: '', cost: '', inv: '',
   })
 
-  useEffect(() => {
-    getProfile()
-      .then((data) => {
-        setValues((v) => ({
-          ...v,
-          carbon: data.carbon_value ?? '',
-          energy: data.energy_value ?? '',
-          waste: data.waste_value ?? '',
-          evtaa: data.evtaa_value ?? '',
-        }))
-      })
-      .catch(() => {})
-  }, [])
-
   function handleChange(e) {
-    setValues((v) => ({ ...v, [e.target.name]: e.target.value }))
+    setValues(v => ({ ...v, [e.target.name]: e.target.value }))
   }
 
   async function handleSubmit(e) {
@@ -47,7 +32,7 @@ export default function SustainabilityPage() {
     setError('')
     try {
       const res = await calculateSustainability(values)
-      navigate('/result/sustainability', { state: { result: res } })
+      navigate('/result/sustainability', { state: { result: res, industry: values.industry } })
     } catch {
       setError('Calculation failed. Please try again.')
     } finally {
@@ -84,14 +69,7 @@ export default function SustainabilityPage() {
             <div className="calc-step-title calc-step-active">{STEPS[step].label}</div>
             <div className="calc-step-sub">{STEPS[step].sub}</div>
 
-            {step === 0 && (
-              <div className="calc-alert-info">
-                <i className="bi bi-info-circle me-2"></i>
-                Values from your individual calculators are pre-filled. You can override them.
-              </div>
-            )}
-
-            {error && <div className="calc-alert-info" style={{ background: '#fff0f0', borderColor: '#fecaca', color: '#dc2626' }}>{error}</div>}
+            {error && <div className="calc-alert-info" style={{ background:'#fff0f0', borderColor:'#fecaca', color:'#dc2626' }}>{error}</div>}
 
             <form onSubmit={handleSubmit}>
               {step === 0 && (

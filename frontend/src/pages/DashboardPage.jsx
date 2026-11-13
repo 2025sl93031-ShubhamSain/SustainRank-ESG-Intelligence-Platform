@@ -369,7 +369,7 @@ export default function DashboardPage() {
                   (sorted_data?.[sortKey] || []).length,
                   +your_company.sustainability_score,
                   +your_company.environmental_score,
-                  +your_company.eevta_score,
+                  +your_company.social_score,
                   +your_company.governance_score,
                   your_company.industry || 'general',
                 )}

@@ -40,16 +40,6 @@ public class ProfileService {
         return profileRepository.save(profile);
     }
 
-    public Map<String, Object> getResultPage(AppUser user) {
-        SustainabilityProfile p = getOrCreateProfile(user);
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("carbon_value", p.getCarbonScore());
-        result.put("energy_value", p.getEnergyTotal());
-        result.put("waste_value", p.getTotalWaste());
-        result.put("evtaa_value", p.getEevtaScore());
-        return result;
-    }
-
     public Map<String, Object> getCompanyProfile(AppUser user) {
         SustainabilityProfile p = getOrCreateProfile(user);
         Map<String, Object> data = new LinkedHashMap<>();

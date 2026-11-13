@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { label: 'SDG Goals',   href: '/#portfolio',type: 'anchor' },
   { label: 'Contact',     href: '/#contact', type: 'anchor' },
   { label: 'History',     to: '/history',    type: 'link' },
+  { label: 'Assessment',  to: '/assessment', type: 'link' },
 ]
 
 export default function Header() {
@@ -258,6 +259,15 @@ export default function Header() {
                 color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none',
               }}>
                 <i className="bi bi-building" style={{ fontSize: '0.85rem' }} /> Company Profile
+              </Link>
+              <Link to="/assessment" style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '10px 14px', borderRadius: 9,
+                background: location.pathname === '/assessment' ? 'rgba(67,97,238,0.2)' : 'transparent',
+                border: location.pathname === '/assessment' ? '1px solid rgba(67,97,238,0.35)' : '1px solid transparent',
+                color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', fontWeight: 500, textDecoration: 'none',
+              }}>
+                <i className="bi bi-clipboard2-data-fill" style={{ fontSize: '0.85rem' }} /> Full Assessment
               </Link>
               <button onClick={handleLogout} style={{
                 display: 'flex', alignItems: 'center', gap: 8,
