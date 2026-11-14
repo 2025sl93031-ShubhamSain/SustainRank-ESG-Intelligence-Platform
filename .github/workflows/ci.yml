@@ -31,9 +31,9 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_DB: ${{ secrets.CI_POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.CI_POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.CI_POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.CI_POSTGRES_DB || 'sustainability_db' }}
+          POSTGRES_USER: ${{ secrets.CI_POSTGRES_USER || 'postgres' }}
+          POSTGRES_PASSWORD: ${{ secrets.CI_POSTGRES_PASSWORD || 'postgres' }}
         ports:
           - 5432:5432
         options: >-
@@ -56,14 +56,14 @@ jobs:
         run: |
           cat > backend/src/main/resources/application.properties <<EOF
           server.port=8000
-          spring.datasource.url=jdbc:postgresql://localhost:5432/${{ secrets.CI_POSTGRES_DB }}
-          spring.datasource.username=${{ secrets.CI_POSTGRES_USER }}
-          spring.datasource.password=${{ secrets.CI_POSTGRES_PASSWORD }}
+          spring.datasource.url=jdbc:postgresql://localhost:5432/${{ secrets.CI_POSTGRES_DB || 'sustainability_db' }}
+          spring.datasource.username=${{ secrets.CI_POSTGRES_USER || 'postgres' }}
+          spring.datasource.password=${{ secrets.CI_POSTGRES_PASSWORD || 'postgres' }}
           spring.jpa.hibernate.ddl-auto=update
           spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
           spring.jpa.show-sql=false
           spring.jackson.serialization.write-dates-as-timestamps=false
-          jwt.secret=${{ secrets.CI_JWT_SECRET }}
+          jwt.secret=${{ secrets.CI_JWT_SECRET || 'c3VzdGFpbnJhbmtfand0X3NlY3JldF9mb3JfY2lfdGVzdGluZ18xMjM0NQ==' }}
           jwt.expiration-ms=86400000
           cors.allowed-origins=http://localhost:5173
           logging.level.com.sustainability=INFO

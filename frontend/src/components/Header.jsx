@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { label: 'Calculators', href: '/#services',type: 'anchor' },
   { label: 'SDG Goals',   href: '/#portfolio',type: 'anchor' },
   { label: 'Contact',     href: '/#contact', type: 'anchor' },
+  { label: 'Dashboard',   to: '/dashboard',  type: 'link' },
   { label: 'History',     to: '/history',    type: 'link' },
 ]
 
@@ -25,7 +26,10 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => setMobileOpen(false), [location])
+  useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
+    setMobileOpen(false)
+  }, [location])
 
   async function handleLogout() {
     setShowLogoutModal(true)
@@ -234,9 +238,9 @@ export default function Header() {
               textDecoration: 'none', transition: 'all 0.15s',
             }
             return item.type === 'link' ? (
-              <Link key={item.label} to={item.to} style={style}>{item.label}</Link>
+              <Link key={item.label} to={item.to} style={style} onClick={() => setMobileOpen(false)}>{item.label}</Link>
             ) : (
-              <a key={item.label} href={item.href} style={style}>{item.label}</a>
+              <a key={item.label} href={item.href} style={style} onClick={() => setMobileOpen(false)}>{item.label}</a>
             )
           })}
 
