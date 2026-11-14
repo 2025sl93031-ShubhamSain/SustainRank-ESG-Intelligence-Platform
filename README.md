@@ -18,7 +18,7 @@
 
 ## Overview
 
-SustainRank lets organisations measure, benchmark and improve their ESG (Environmental, Social, Governance) performance. It provides five science-backed calculators, a live competitive leaderboard, and a radar-chart dashboard — all aligned to internationally recognised frameworks.
+SustainRank lets organisations measure, benchmark and improve their ESG (Environmental, Social, Governance) performance. It provides a unified multi-step assessment wizard, a live competitive leaderboard, and a radar-chart dashboard — all aligned to internationally recognised frameworks.
 
 | Framework | Coverage |
 |-----------|----------|
@@ -31,13 +31,10 @@ SustainRank lets organisations measure, benchmark and improve their ESG (Environ
 
 ## Features
 
-- **Carbon Calculator** — Grid, gas, petrol, diesel, LPG, flight and rail emission factors
-- **Energy Calculator** — Electricity and fuel consumption benchmarked by sector
-- **Waste Calculator** — Total waste, recycled, composted, landfill diversion rate
-- **Workforce (EEVTA) Calculator** — Training, retention, benefits, gender equity, disability inclusion
-- **Sustainability Score** — ESG composite (Environmental 50% · Social 30% · Governance 20%) with blended ROI
+- **Full ESG Assessment Wizard** — Unified 6-step flow (Organisation → Carbon → Energy → Waste → Social → Financial) replacing five separate calculators; jump between steps freely, visual completion indicators per step
 - **ESG Dashboard** — Live peer rankings, radar chart, change-vs-last-run metrics
 - **AI Recommendations** — Context-aware ESG improvement suggestions on every result page and the dashboard; provider-agnostic (OpenAI, Gemini, Anthropic, Ollama, OpenRouter)
+- **Company Profile** — Edit company name, industry, employee count; change password
 - **History** — Last 20 calculation runs per organisation
 - **JWT Authentication** — Stateless, secure, no cookies required
 - **17 SDG Goal Index** — Interactive cards linking to UN documentation
@@ -76,12 +73,13 @@ SustainRank-ESG-Intelligence-Platform/
 │   └── src/main/java/com/sustainability/
 │       ├── ai/                       # AI recommendations (provider-agnostic)
 │       ├── config/                   # SecurityConfig, JwtConfig
-│       ├── controller/               # AuthController, CalculatorController, DashboardController, …
-│       ├── dto/                      # Request/Response DTOs
+│       ├── controller/               # AuthController, CalculatorController, DashboardController, ProfileController, …
+│       ├── dto/                      # Request/Response DTOs (with Bean Validation)
 │       ├── entity/                   # AppUser, SustainabilityProfile, CalculationHistory
+│       ├── exception/                # GlobalExceptionHandler
 │       ├── repository/               # Spring Data JPA repositories
 │       ├── security/                 # JwtUtil, JwtAuthFilter, UserDetailsServiceImpl
-│       ├── service/                  # Business logic (carbon, energy, waste, eevta, score, dashboard, …)
+│       ├── service/                  # Business logic (carbon, energy, waste, eevta, score, dashboard, profile, …)
 │       └── util/                     # CalcUtils (emission factors, benchmarks), SdgConstants
 │   └── src/main/resources/
 │       ├── application.properties.example   # ← copy to application.properties
@@ -91,12 +89,13 @@ SustainRank-ESG-Intelligence-Platform/
 │   ├── vite.config.js                # Vite dev proxy → localhost:8000
 │   ├── .env.example                  # ← copy to .env
 │   └── src/
-│       ├── api/                      # axiosInstance, auth.js, dashboard.js, ai.js
+│       ├── api/                      # axiosInstance, auth.js, calculators.js, dashboard.js, ai.js
 │       ├── components/               # Header, Footer, AiRecommendations
 │       ├── context/                  # AuthContext (JWT localStorage)
-│       └── pages/                    # IndexPage, LoginPage, RegisterPage, DashboardPage, …
+│       └── pages/                    # AssessmentWizard, AggResultPage, DashboardPage, ProfilePage, …
 │
 ├── .gitignore
+├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
@@ -252,7 +251,7 @@ Demo accounts after seeding:
 
 ### 8. Register your own account
 
-Go to `http://localhost:5173/register` and create your organisation account, then explore all calculators.
+Go to `http://localhost:5173/register` and create your organisation account, then run the Full ESG Assessment at `/assessment`.
 
 ---
 
@@ -265,13 +264,16 @@ Go to `http://localhost:5173/register` and create your organisation account, the
 | POST | `/api/logout/` | Public | Logout (client removes token) |
 | GET | `/api/me/` | JWT | Current user info |
 | GET | `/api/index/` | JWT | SDG data for home page |
-| POST | `/api/carbon/` | JWT | Carbon emission calculation |
-| POST | `/api/energy/` | JWT | Energy consumption calculation |
-| POST | `/api/waste/` | JWT | Waste management calculation |
-| POST | `/api/eevta/` | JWT | Workforce development scoring |
-| POST | `/api/sustainability/` | JWT | Full ESG composite score |
+| POST | `/api/carbon_calculator/` | JWT | Carbon emission calculation |
+| POST | `/api/energy_calculator/` | JWT | Energy consumption calculation |
+| POST | `/api/waste_calculator/` | JWT | Waste management calculation |
+| POST | `/api/calculate_eevta_score/` | JWT | Workforce development scoring |
+| POST | `/api/sustainability_calculator/` | JWT | Full ESG composite score |
 | GET | `/api/dashboard/` | JWT | Rankings, radar data, change metrics |
 | GET | `/api/history/` | JWT | Last 20 calculation history entries |
+| GET | `/api/profile/` | JWT | Get company profile |
+| PUT | `/api/profile/` | JWT | Update company profile |
+| POST | `/api/profile/change-password/` | JWT | Change account password |
 | POST | `/api/ai/result` | JWT | AI recommendations for a calculator result |
 | POST | `/api/ai/dashboard` | JWT | AI recommendations based on rank + ESG scores |
 

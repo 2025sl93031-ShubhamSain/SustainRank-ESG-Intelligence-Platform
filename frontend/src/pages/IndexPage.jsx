@@ -31,12 +31,9 @@ const SDG_DATA_FALLBACK = {
 }
 
 const SERVICES = [
-  { to:'/carbon',       icon:'bi-cloud-haze2-fill',   color:'#4361ee', bg:'rgba(67,97,238,0.08)',   title:'Carbon Emission',              desc:'Calculate your GHG footprint across Scope 1, 2 & 3 emission sources using the GHG Protocol.' },
-  { to:'/energy',       icon:'bi-lightning-charge-fill', color:'#f59e0b', bg:'rgba(245,158,11,0.08)', title:'Energy Consumption',           desc:'Benchmark electricity, gas and fuel usage against ISO 50001 sector standards.' },
-  { to:'/waste',        icon:'bi-recycle',             color:'#10b981', bg:'rgba(16,185,129,0.08)', title:'Waste Management',             desc:'Track diversion rates, recycling and circular economy performance per GRI 306.' },
-  { to:'/eevta',        icon:'bi-people-fill',         color:'#8b5cf6', bg:'rgba(139,92,246,0.08)', title:'Workforce Development',        desc:'Score training coverage, retention, benefits and diversity aligned to SDG 8.' },
-  { to:'/sustainability',icon:'bi-clipboard2-data-fill',color:'#ef4444', bg:'rgba(239,68,68,0.08)',  title:'Sustainability Score',         desc:'Unified ESG composite: Environmental 50% · Social 30% · Governance 20%.' },
-  { to:'/dashboard',    icon:'bi-bar-chart-line-fill', color:'#06b6d4', bg:'rgba(6,182,212,0.08)',  title:'ESG Scoreboard',               desc:'Peer ranking, radar chart, ROI analysis and sector-level benchmarking.' },
+  { to:'/assessment', icon:'bi-clipboard2-data-fill', color:'#4361ee', bg:'rgba(67,97,238,0.08)', title:'Full ESG Assessment',   desc:'One guided 6-step wizard covering carbon, energy, waste, social and financial metrics — get your composite ESG score in minutes.' },
+  { to:'/sustainability', icon:'bi-bar-chart-steps', color:'#10b981', bg:'rgba(16,185,129,0.08)', title:'Sustainability Score', desc:'Unified ESG composite: Environmental 50% · Social 30% · Governance 20% with blended ROI analysis.' },
+  { to:'/dashboard',  icon:'bi-bar-chart-line-fill',  color:'#06b6d4', bg:'rgba(6,182,212,0.08)',  title:'ESG Scoreboard',       desc:'Peer ranking, radar chart, change-vs-last-run metrics and sector-level benchmarking.' },
 ]
 
 const FEATURES = [
@@ -142,7 +139,7 @@ export default function IndexPage() {
               { value:'17', label:'SDG Goals Covered' },
               { value:'4', label:'ESG Pillars Tracked' },
               { value:'100', label:'Point Score Scale' },
-              { value:'6', label:'Calculators' },
+              { value:'6', label:'Metrics Assessed' },
             ].map(s => (
               <div key={s.label}>
                 <div style={{ fontSize:'2rem', fontWeight:900, color:'#fff', fontFamily:"'Raleway',sans-serif", lineHeight:1 }}>{s.value}</div>
@@ -215,10 +212,10 @@ export default function IndexPage() {
           <div style={{ textAlign:'center', marginBottom:56 }}>
             <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(67,97,238,0.08)', borderRadius:24, padding:'5px 16px', marginBottom:16 }}>
               <i className="bi bi-grid-fill" style={{ color:'#4361ee', fontSize:'0.8rem' }} />
-              <span style={{ fontSize:'0.7rem', fontWeight:700, color:'#4361ee', textTransform:'uppercase', letterSpacing:'1.2px' }}>Calculators</span>
+              <span style={{ fontSize:'0.7rem', fontWeight:700, color:'#4361ee', textTransform:'uppercase', letterSpacing:'1.2px' }}>Platform</span>
             </div>
-            <h2 style={{ fontSize:'2rem', fontWeight:900, color:'#0f172a', fontFamily:"'Raleway',sans-serif", marginBottom:12 }}>Key Sustainability Calculators</h2>
-            <p style={{ fontSize:'0.95rem', color:'#64748b', maxWidth:520, margin:'0 auto' }}>Six tools aligned to international ESG frameworks — measure, benchmark and improve.</p>
+            <h2 style={{ fontSize:'2rem', fontWeight:900, color:'#0f172a', fontFamily:"'Raleway',sans-serif", marginBottom:12 }}>Everything You Need</h2>
+            <p style={{ fontSize:'0.95rem', color:'#64748b', maxWidth:520, margin:'0 auto' }}>Assess, score and benchmark your organisation's ESG performance in one place.</p>
           </div>
 
           <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }}>
@@ -241,7 +238,7 @@ export default function IndexPage() {
                 <div style={{ fontSize:'0.98rem', fontWeight:700, color:'#0f172a', marginBottom:8 }}>{s.title}</div>
                 <div style={{ fontSize:'0.82rem', color:'#64748b', lineHeight:1.65 }}>{s.desc}</div>
                 <div style={{ display:'flex', alignItems:'center', gap:6, marginTop:18, color:s.color, fontSize:'0.8rem', fontWeight:600 }}>
-                  Open calculator <i className="bi bi-arrow-right" />
+                  Open <i className="bi bi-arrow-right" />
                 </div>
               </Link>
             ))}
@@ -298,13 +295,13 @@ export default function IndexPage() {
                     </div>
                   ))}
                 </div>
-                <Link to={SERVICES[i].to} style={{
+                <Link to="/assessment" style={{
                   display:'inline-flex', alignItems:'center', gap:8, marginTop:28,
                   background:`linear-gradient(135deg,${f.color},${f.color}cc)`,
                   color:'#fff', padding:'12px 24px', borderRadius:10, textDecoration:'none',
                   fontWeight:700, fontSize:'0.88rem', boxShadow:`0 4px 16px ${f.color}44`,
                 }}>
-                  <i className={`bi ${f.icon}`} /> Open Calculator
+                  <i className={`bi ${f.icon}`} /> Open Assessment
                 </Link>
               </div>
 

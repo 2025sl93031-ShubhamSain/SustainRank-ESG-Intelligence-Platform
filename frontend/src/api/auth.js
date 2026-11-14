@@ -19,11 +19,6 @@ export async function logoutUser() {
   return res.data
 }
 
-export async function getProfile() {
-  const res = await api.get('/page/result-page/')
-  return res.data
-}
-
 export async function getSdgData() {
   const res = await api.get('/index/')
   return res.data
