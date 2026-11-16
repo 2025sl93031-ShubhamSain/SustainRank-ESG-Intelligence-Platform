@@ -138,6 +138,22 @@ class AuthServiceTest {
             "u3".equals(((AppUser) u).getUsername()) && "hashed".equals(((AppUser) u).getPassword())));
     }
 
+    @Test
+    void register_password2Present_doesNotReturnConfirmationError() {
+        when(userRepository.existsByUsername("newUser")).thenReturn(false);
+        when(userRepository.existsByEmail("new@test.com")).thenReturn(false);
+        when(passwordEncoder.encode("password123")).thenReturn("hashed");
+        when(userRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(profileService.getOrCreateProfile(any())).thenReturn(profile);
+        when(profileService.saveProfile(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        Map<String, Object> result = authService.register(
+            reg("Acme", "newUser", "new@test.com", "password123", "password123"));
+
+        assertThat(result).containsEntry("success", true);
+        assertThat(result).doesNotContainKey("error");
+    }
+
     private RegisterRequest reg(String company, String username, String email, String pw1, String pw2) {
         RegisterRequest r = new RegisterRequest();
         r.setCompany_name(company); r.setUsername(username);
