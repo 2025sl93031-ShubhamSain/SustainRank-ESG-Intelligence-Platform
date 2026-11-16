@@ -19,18 +19,18 @@
 -- BCrypt hash for "test123" (cost 12)
 
 -- ── Users ─────────────────────────────────────────────────────────────────────
-INSERT INTO app_user (username, email, password, created_at) VALUES
-  ('testuser',        'test@acme.com',              '$2b$12$vx0GRdqN2LCta93duJNT9uj5raUj.nfHJiw9knzGyHuUVChBe1l0q', NOW() - INTERVAL '1 day'),
-  ('ironcore_mfg',    'esg@ironcore.example.com',   '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '120 days'),
-  ('nexasoft_esg',    'sustain@nexasoft.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '110 days'),
-  ('verdex_green',    'green@verdex.example.com',   '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '100 days'),
-  ('axiom_sustain',   'esg@axiom.example.com',      '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '95 days'),
-  ('petranova_esg',   'sustain@petranova.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '90 days'),
-  ('quantum_tech',    'esg@quantumtech.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '85 days'),
-  ('medzara_health',  'green@medzara.example.com',  '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '80 days'),
-  ('circletrade',     'esg@circletrade.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '75 days'),
-  ('velodrive_auto',  'sustain@velodrive.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '70 days'),
-  ('crestbank',       'esg@crestbank.example.com',  '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', NOW() - INTERVAL '65 days')
+INSERT INTO app_user (username, email, password, role, created_at) VALUES
+  ('testuser',        'test@acme.com',              '$2b$12$vx0GRdqN2LCta93duJNT9uj5raUj.nfHJiw9knzGyHuUVChBe1l0q', 'USER',  NOW() - INTERVAL '1 day'),
+  ('ironcore_mfg',    'esg@ironcore.example.com',   '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER',  NOW() - INTERVAL '120 days'),
+  ('nexasoft_esg',    'sustain@nexasoft.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER',  NOW() - INTERVAL '110 days'),
+  ('verdex_green',    'green@verdex.example.com',   '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER',  NOW() - INTERVAL '100 days'),
+  ('axiom_sustain',   'esg@axiom.example.com',      '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER',  NOW() - INTERVAL '95 days'),
+  ('petranova_esg',   'sustain@petranova.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER', NOW() - INTERVAL '90 days'),
+  ('quantum_tech',    'esg@quantumtech.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER',  NOW() - INTERVAL '85 days'),
+  ('medzara_health',  'green@medzara.example.com',  '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER',  NOW() - INTERVAL '80 days'),
+  ('circletrade',     'esg@circletrade.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER',  NOW() - INTERVAL '75 days'),
+  ('velodrive_auto',  'sustain@velodrive.example.com','$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER', NOW() - INTERVAL '70 days'),
+  ('crestbank',       'esg@crestbank.example.com',  '$2b$10$I/uTpm4gxSqyEXW8xR65e.uG2DdsBINQJ7TugiaPfArUyYz/SahhG', 'USER',  NOW() - INTERVAL '65 days')
 ON CONFLICT (username) DO NOTHING;
 
 -- ── Sustainability Profiles ───────────────────────────────────────────────────
