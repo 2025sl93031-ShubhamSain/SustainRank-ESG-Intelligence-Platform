@@ -10,8 +10,13 @@ export async function loginUser(username, password) {
 }
 
 export async function registerUser(data) {
-  const res = await api.post('/register/', data)
-  return res.data
+  try {
+    const res = await api.post('/register/', data)
+    return res.data
+  } catch (err) {
+    const msg = err.response?.data?.error || 'Registration failed. Please try again.'
+    throw new Error(msg)
+  }
 }
 
 export async function logoutUser() {
