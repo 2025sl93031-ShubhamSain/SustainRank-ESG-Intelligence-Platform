@@ -120,6 +120,26 @@ export default function Header() {
                 </a>
               )
             })}
+            {user?.role === 'ADMIN' && (
+              <Link
+                to="/leaderboard"
+                style={{
+                  padding: '6px 14px', borderRadius: 7,
+                  fontSize: '0.85rem', fontWeight: location.pathname === '/leaderboard' ? 700 : 500,
+                  color: location.pathname === '/leaderboard' ? '#fff' : 'rgba(255,215,0,0.75)',
+                  textDecoration: 'none',
+                  background: location.pathname === '/leaderboard' ? 'rgba(255,215,0,0.15)' : 'transparent',
+                  border: location.pathname === '/leaderboard' ? '1px solid rgba(255,215,0,0.3)' : '1px solid transparent',
+                  transition: 'all 0.18s',
+                  display: 'flex', alignItems: 'center', gap: 5,
+                }}
+                onMouseEnter={e => { if (location.pathname !== '/leaderboard') { e.currentTarget.style.color='#FFD700'; e.currentTarget.style.background='rgba(255,215,0,0.1)' }}}
+                onMouseLeave={e => { if (location.pathname !== '/leaderboard') { e.currentTarget.style.color='rgba(255,215,0,0.75)'; e.currentTarget.style.background='transparent' }}}
+              >
+                <i className="bi bi-trophy-fill" style={{ fontSize: '0.8rem' }} />
+                Leaderboard
+              </Link>
+            )}
           </nav>
 
           {/* Right side */}
@@ -239,6 +259,19 @@ export default function Header() {
               <a key={item.label} href={item.href} style={style}>{item.label}</a>
             )
           })}
+          {user?.role === 'ADMIN' && (
+            <Link to="/leaderboard" style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '10px 14px', borderRadius: 9,
+              fontSize: '0.9rem', fontWeight: location.pathname === '/leaderboard' ? 700 : 500,
+              color: location.pathname === '/leaderboard' ? '#FFD700' : 'rgba(255,215,0,0.7)',
+              background: location.pathname === '/leaderboard' ? 'rgba(255,215,0,0.12)' : 'transparent',
+              border: location.pathname === '/leaderboard' ? '1px solid rgba(255,215,0,0.3)' : '1px solid transparent',
+              textDecoration: 'none',
+            }}>
+              <i className="bi bi-trophy-fill" style={{ fontSize: '0.85rem' }} /> Leaderboard
+            </Link>
+          )}
 
           <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '10px 0' }} />
 

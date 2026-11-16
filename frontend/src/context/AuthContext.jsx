@@ -11,7 +11,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     api.get('/me/')
       .then((res) => {
-        if (res.data?.authenticated) setUser({ username: res.data.username })
+        if (res.data?.authenticated) setUser({ username: res.data.username, role: res.data.role || 'USER' })
       })
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -21,7 +21,13 @@ export function AuthProvider({ children }) {
     const data = await loginUser(username, password)
     if (data.success) {
       localStorage.setItem('auth_token', data.token)
-      setUser({ username: data.username })
+      // fetch role from /me/ after login
+      try {
+        const me = await api.get('/me/')
+        setUser({ username: data.username, role: me.data.role || 'USER' })
+      } catch {
+        setUser({ username: data.username, role: 'USER' })
+      }
       return { success: true }
     }
     return { success: false, error: data.error }
