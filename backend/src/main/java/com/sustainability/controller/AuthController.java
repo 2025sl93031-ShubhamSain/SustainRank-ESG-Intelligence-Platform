@@ -2,6 +2,7 @@ package com.sustainability.controller;
 
 import com.sustainability.dto.LoginRequest;
 import com.sustainability.dto.RegisterRequest;
+import com.sustainability.repository.UserRepository;
 import com.sustainability.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,11 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserRepository userRepository;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UserRepository userRepository) {
         this.authService = authService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/csrf/")
@@ -35,7 +38,14 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("authenticated", false));
         }
-        return ResponseEntity.ok(Map.of("authenticated", true, "username", userDetails.getUsername()));
+        String role = userRepository.findByUsername(userDetails.getUsername())
+            .map(u -> u.getRole())
+            .orElse("USER");
+        return ResponseEntity.ok(Map.of(
+            "authenticated", true,
+            "username", userDetails.getUsername(),
+            "role", role
+        ));
     }
 
     @PostMapping(value = "/login/",
