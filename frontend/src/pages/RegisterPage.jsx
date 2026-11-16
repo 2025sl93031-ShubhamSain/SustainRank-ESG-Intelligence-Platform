@@ -29,8 +29,8 @@ export default function RegisterPage() {
       } else {
         setError(res.error || 'Registration failed.')
       }
-    } catch {
-      setError('Registration failed. Please try again.')
+    } catch (err) {
+      setError(err.message || 'Registration failed. Please try again.')
     } finally {
       setLoading(false)
     }
