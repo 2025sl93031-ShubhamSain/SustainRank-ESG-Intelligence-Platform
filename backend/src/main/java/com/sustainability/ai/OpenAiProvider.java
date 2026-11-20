@@ -23,6 +23,8 @@ public class OpenAiProvider implements AiProvider {
                 .baseUrl(baseUrl)
                 .defaultHeader("Authorization", "Bearer " + config.getApiKey())
                 .defaultHeader("Content-Type", "application/json")
+                .defaultHeader("HTTP-Referer", "http://localhost:5173")
+                .defaultHeader("X-Title", "SustainRank")
                 .build();
 
         Map<String, Object> body = Map.of(

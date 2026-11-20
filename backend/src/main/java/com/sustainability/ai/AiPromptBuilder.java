@@ -1,12 +1,32 @@
 package com.sustainability.ai;
 
+import java.util.Map;
+
 public class AiPromptBuilder {
 
     public static String build(AiRecommendationRequest req) {
         if ("dashboard".equals(req.getType())) {
             return buildDashboardPrompt(req);
         }
+        if ("report_analysis".equals(req.getType())) {
+            return buildReportAnalysisPrompt(req);
+        }
         return buildResultPrompt(req);
+    }
+
+    private static String buildReportAnalysisPrompt(AiRecommendationRequest req) {
+        Map<String, Object> details = req.getDetails();
+        String excerpt = details != null && details.containsKey("report_excerpt")
+                ? details.get("report_excerpt").toString() : "";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("You are an ESG analyst. Analyse the following excerpt from a sustainability/ESG report ");
+        sb.append("and provide 3 to 5 specific, actionable insights about the company's ESG performance. ");
+        sb.append("Focus on strengths, weaknesses, and improvement areas based on the data present. ");
+        sb.append("Each insight must be one concise sentence. ");
+        sb.append("Return only the bullet points, no preamble, no numbering. Start each line with a dash (-).\n\n");
+        sb.append("Report excerpt:\n").append(excerpt);
+        return sb.toString();
     }
 
     private static String buildResultPrompt(AiRecommendationRequest req) {

@@ -39,6 +39,19 @@ export async function updateCompanyProfile(data) {
   return res.data
 }
 
+export async function analyseReport(file) {
+  try {
+    const form = new FormData()
+    form.append('file', file)
+    const res = await api.post('/reports/analyse', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return res.data
+  } catch (err) {
+    return err?.response?.data ?? { success: false, error: 'Failed to analyse report.' }
+  }
+}
+
 export async function changePassword(data) {
   try {
     const res = await api.post('/profile/change-password/', data)

@@ -17,6 +17,10 @@ export default function RegisterPage() {
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+    if (form.password1.length < 8) {
+      setError('Password must be at least 8 characters.')
+      return
+    }
     if (form.password1 !== form.password2) {
       setError("Passwords don't match.")
       return
