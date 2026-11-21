@@ -6,14 +6,21 @@ Thank you for considering contributing! This project is open source under the MI
 
 ## Table of Contents
 
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-- [How to Contribute](#how-to-contribute)
-- [Branch Naming](#branch-naming)
-- [Commit Messages](#commit-messages)
-- [Pull Request Checklist](#pull-request-checklist)
-- [Reporting Bugs](#reporting-bugs)
-- [Suggesting Features](#suggesting-features)
+- [Contributing to SustainRank](#contributing-to-sustainrank)
+  - [Table of Contents](#table-of-contents)
+  - [Code of Conduct](#code-of-conduct)
+  - [Contributor License Agreement](#contributor-license-agreement)
+  - [Getting Started](#getting-started)
+  - [How to Contribute](#how-to-contribute)
+    - [Bug fixes \& small improvements](#bug-fixes--small-improvements)
+    - [New features](#new-features)
+    - [Documentation](#documentation)
+  - [Open an issue to discuss what changes you are introducing before submitting a PR. Describe the section being updated.](#open-an-issue-to-discuss-what-changes-you-are-introducing-before-submitting-a-pr-describe-the-section-being-updated)
+  - [Branch Naming](#branch-naming)
+  - [Commit Messages](#commit-messages)
+  - [Pull Request Checklist](#pull-request-checklist)
+  - [Reporting Bugs](#reporting-bugs)
+  - [Suggesting Features](#suggesting-features)
 
 ---
 
@@ -46,8 +53,7 @@ Open a PR directly. Reference the issue number if one exists.
 Open an **issue first** to discuss the idea before writing code. This avoids duplicate effort and ensures the feature aligns with the project direction.
 
 ### Documentation
-Always welcome — no issue needed.
-
+Open an issue to discuss what changes you are introducing before submitting a PR. Describe the section being updated.
 ---
 
 ## Branch Naming
