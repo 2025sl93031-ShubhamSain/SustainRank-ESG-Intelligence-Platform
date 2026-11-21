@@ -1,0 +1,110 @@
+/* ===================================================
+   NAVBAR
+   =================================================== */
+.header {
+  padding: 0 !important;
+  height: 68px;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+
+.header .container-fluid {
+  height: 68px;
+}
+
+.header .logo img {
+  height: 38px;
+  width: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,74,23,0.6);
+  transition: border-color 0.3s;
+}
+
+.header .logo img:hover {
+  border-color: #ff4a17;
+}
+
+.header .logo .sitename {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 1.25rem !important;
+  font-weight: 700;
+  color: #fff !important;
+  letter-spacing: 2px;
+  margin: 0 0 0 10px;
+  text-shadow: 0 0 18px rgba(255,74,23,0.5);
+}
+
+/* Nav links */
+.header .navmenu a,
+.header .navmenu a:focus {
+  font-size: 12px !important;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #cdd6f0 !important;
+  padding: 4px 0 !important;
+  position: relative;
+  transition: color 0.25s;
+}
+
+.header .navmenu a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #ff4a17;
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+.header .navmenu a:hover,
+.header .navmenu a.active {
+  color: #fff !important;
+}
+
+.header .navmenu a:hover::after,
+.header .navmenu a.active::after {
+  width: 100%;
+}
+
+.header .navmenu > ul > li {
+  padding: 0 16px !important;
+}
+
+/* Logout button styled as nav pill */
+.nav-logout-btn {
+  background: linear-gradient(135deg, #ff4a17, #d63c0f) !important;
+  color: #fff !important;
+  border: none;
+  padding: 6px 18px !important;
+  border-radius: 20px;
+  font-size: 12px !important;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 2px 8px rgba(255,74,23,0.35);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.nav-logout-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(255,74,23,0.5);
+  color: #fff !important;
+}
+
+.nav-logout-btn::after {
+  display: none !important;
+}
+
+/* Mobile toggle */
+.mobile-nav-toggle {
+  font-size: 1.4rem !important;
+  color: #fff !important;
+}

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import { calculateCarbon, calculateEnergy, calculateWaste, calculateEevta, calculateSustainability } from '../api/calculators'
+import './AssessmentWizard.css'
 
 const STEPS = [
   { id: 'org',      label: 'Organisation', icon: 'bi-building' },

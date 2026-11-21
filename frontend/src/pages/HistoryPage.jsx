@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import { getHistory, deleteHistory } from '../api/history'
+import './HistoryPage.css'
 
 function scoreColor(val) {
   if (val == null || isNaN(+val)) return '#9ca3af'
