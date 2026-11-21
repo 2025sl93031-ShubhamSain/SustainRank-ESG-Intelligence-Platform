@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage'
 import AssessmentWizard from './pages/AssessmentWizard'
 import SustainabilityPage from './pages/SustainabilityPage'
 import LeaderboardPage from './pages/LeaderboardPage'
+import ReportAnalysisPage from './pages/ReportAnalysisPage'
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/assessment" element={<AssessmentWizard />} />
             <Route path="/sustainability" element={<SustainabilityPage />} />
+            <Route path="/report-analysis" element={<ReportAnalysisPage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

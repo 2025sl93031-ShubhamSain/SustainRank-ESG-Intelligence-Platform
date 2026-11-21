@@ -34,6 +34,7 @@ const SERVICES = [
   { to:'/assessment', icon:'bi-clipboard2-data-fill', color:'#4361ee', bg:'rgba(67,97,238,0.08)', title:'Full ESG Assessment',   desc:'One guided 6-step wizard covering carbon, energy, waste, social and financial metrics — get your composite ESG score in minutes.' },
   { to:'/sustainability', icon:'bi-bar-chart-steps', color:'#10b981', bg:'rgba(16,185,129,0.08)', title:'Sustainability Score', desc:'Unified ESG composite: Environmental 50% · Social 30% · Governance 20% with blended ROI analysis.' },
   { to:'/dashboard',  icon:'bi-bar-chart-line-fill',  color:'#06b6d4', bg:'rgba(6,182,212,0.08)',  title:'ESG Scoreboard',       desc:'Peer ranking, radar chart, change-vs-last-run metrics and sector-level benchmarking.' },
+  { to:'/report-analysis', icon:'bi-file-earmark-bar-graph-fill', color:'#7c3aed', bg:'rgba(124,58,237,0.08)', title:'Report Analysis', desc:'Upload your annual report, sustainability report or BRSR — automatically extract ESG metrics and compare with your assessment data.' },
 ]
 
 const FEATURES = [

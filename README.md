@@ -32,6 +32,7 @@ SustainRank lets organisations measure, benchmark and improve their ESG (Environ
 ## Features
 
 - **Full ESG Assessment Wizard** — Unified 6-step flow (Organisation → Carbon → Energy → Waste → Social → Financial) replacing five separate calculators; jump between steps freely, visual completion indicators per step
+- **ESG Report Analysis** — Upload any PDF annual/sustainability/BRSR report to automatically extract ESG metrics, benchmark against IT/Tech sector averages, score report completeness (X/15 standard indicators), and get AI-powered insights
 - **ESG Dashboard** — Live peer rankings, radar chart, change-vs-last-run metrics
 - **AI Recommendations** — Context-aware ESG improvement suggestions on every result page and the dashboard; provider-agnostic (OpenAI, Gemini, Anthropic, Ollama, OpenRouter)
 - **Company Profile** — Edit company name, industry, employee count; change password
@@ -80,6 +81,7 @@ SustainRank-ESG-Intelligence-Platform/
 │       ├── repository/               # Spring Data JPA repositories
 │       ├── security/                 # JwtUtil, JwtAuthFilter, UserDetailsServiceImpl
 │       ├── service/                  # Business logic (carbon, energy, waste, eevta, score, dashboard, profile, …)
+│       ├── report/                   # ReportController, ReportService, ReportAnalysisResult (PDF analysis)
 │       └── util/                     # CalcUtils (emission factors, benchmarks), SdgConstants
 │   └── src/main/resources/
 │       ├── application.properties.example   # ← copy to application.properties
@@ -92,7 +94,7 @@ SustainRank-ESG-Intelligence-Platform/
 │       ├── api/                      # axiosInstance, auth.js, calculators.js, dashboard.js, ai.js
 │       ├── components/               # Header, Footer, AiRecommendations
 │       ├── context/                  # AuthContext (JWT localStorage)
-│       └── pages/                    # AssessmentWizard, AggResultPage, DashboardPage, ProfilePage, …
+│       └── pages/                    # AssessmentWizard, AggResultPage, DashboardPage, ProfilePage, ReportAnalysisPage, …
 │
 ├── .gitignore
 ├── CHANGELOG.md
@@ -202,7 +204,7 @@ ai.base-url=                # optional, e.g. https://openrouter.ai/api for OpenR
 
 ---
 
-### 4. Start the backend
+### 5. Start the backend
 
 ```bash
 cd backend
@@ -214,7 +216,7 @@ Hibernate will auto-create all tables on first run (`ddl-auto=update`).
 
 ---
 
-### 5. Configure the frontend
+### 6. Configure the frontend
 
 ```bash
 cd frontend
@@ -224,7 +226,7 @@ npm install
 
 ---
 
-### 6. Start the frontend
+### 7. Start the frontend
 
 ```bash
 npm run dev
@@ -234,7 +236,7 @@ Open `http://localhost:5173` in your browser.
 
 ---
 
-### 7. Load demo data (optional)
+### 8. Load demo data (optional)
 
 Seed the database with 11 demo companies and two history entries each:
 
@@ -249,7 +251,7 @@ Demo accounts after seeding:
 | `testuser` | `test123` | Shubham Industries |
 
 
-### 8. Register your own account
+### 9. Register your own account
 
 Go to `http://localhost:5173/register` and create your organisation account, then run the Full ESG Assessment at `/assessment`.
 
@@ -276,6 +278,7 @@ Go to `http://localhost:5173/register` and create your organisation account, the
 | POST | `/api/profile/change-password/` | JWT | Change account password |
 | POST | `/api/ai/result` | JWT | AI recommendations for a calculator result |
 | POST | `/api/ai/dashboard` | JWT | AI recommendations based on rank + ESG scores |
+| POST | `/api/reports/analyse` | JWT | Upload PDF report, extract ESG metrics, benchmark against industry, AI insights |
 
 ---
 

@@ -4,9 +4,9 @@
 
 | Version | Supported |
 |---------|-----------|
-| 1.1.x (latest) | ✅ |
-| 1.0.x | ✅ |
-| older | ❌ |
+| 2.1.x (latest) | ✅ |
+| 2.0.x | ✅ |
+| 1.x and older | ❌ |
 
 ## Reporting a Vulnerability
 
@@ -50,7 +50,7 @@ We appreciate responsible disclosure and will credit you in the fix if you wish.
 - The backend proxies all AI calls — the key is never sent to or visible from the frontend
 
 ### API Endpoint Protection
-- All `/api/ai/**`, `/api/carbon/`, `/api/energy/`, `/api/waste/`, `/api/eevta/`, `/api/sustainability/`, `/api/dashboard/`, and `/api/history/` endpoints require a valid JWT — unauthenticated requests are rejected with `401`
+- All `/api/ai/**`, `/api/carbon/`, `/api/energy/`, `/api/waste/`, `/api/eevta/`, `/api/sustainability/`, `/api/dashboard/`, `/api/history/`, and `/api/reports/` endpoints require a valid JWT — unauthenticated requests are rejected with `401`
 - Only `/api/register/` and `/api/login/` are public
 - CORS is restricted to `cors.allowed-origins` — set this to your frontend's exact origin in production (never `*`)
 - The AI endpoints (`POST /api/ai/result`, `POST /api/ai/dashboard`) are rate-limited only by your provider's quota; consider adding Spring rate-limiting middleware if exposing publicly

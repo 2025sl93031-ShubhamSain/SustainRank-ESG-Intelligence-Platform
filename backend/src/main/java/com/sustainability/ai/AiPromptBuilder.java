@@ -1,12 +1,66 @@
 package com.sustainability.ai;
 
+import java.util.List;
+import java.util.Map;
+
 public class AiPromptBuilder {
 
     public static String build(AiRecommendationRequest req) {
         if ("dashboard".equals(req.getType())) {
             return buildDashboardPrompt(req);
         }
+        if ("report_analysis".equals(req.getType())) {
+            return buildReportAnalysisPrompt(req);
+        }
+        if ("report_extraction".equals(req.getType())) {
+            return buildExtractionPrompt(req);
+        }
         return buildResultPrompt(req);
+    }
+
+    public static String buildExtractionPrompt(AiRecommendationRequest req) {
+        Map<String, Object> details = req.getDetails();
+        String excerpt = details != null && details.containsKey("report_excerpt")
+                ? details.get("report_excerpt").toString() : "";
+
+        return "You are an ESG data extraction specialist. Read the following text from a sustainability/ESG/BRSR report " +
+               "and extract the values for the ESG indicators listed below. " +
+               "Return ONLY a valid JSON object with exactly these keys. " +
+               "Use null for any indicator not mentioned in the text. " +
+               "Return numbers only (no units, no commas, no text). " +
+               "Do not include any explanation, markdown, or text outside the JSON object.\n\n" +
+               "Keys to extract:\n" +
+               "- carbon_emissions_tco2e (total GHG / carbon emissions in tCO2e)\n" +
+               "- energy_consumption_kwh (total energy consumption in kWh)\n" +
+               "- renewable_pct (percentage of energy from renewable sources)\n" +
+               "- waste_tonnes (total waste generated in tonnes)\n" +
+               "- recycling_rate_pct (waste recycled or diverted, as a percentage)\n" +
+               "- num_employees (total number of employees)\n" +
+               "- revenue (total revenue in local currency)\n" +
+               "- water_consumption_kl (total water consumption in kilolitres)\n" +
+               "- scope1_emissions (Scope 1 GHG emissions in tCO2e)\n" +
+               "- scope2_emissions (Scope 2 GHG emissions in tCO2e)\n" +
+               "- scope3_emissions (Scope 3 GHG emissions in tCO2e)\n" +
+               "- training_hours_per_employee (average training hours per employee per year)\n" +
+               "- gender_ratio_pct (percentage of women / female employees)\n" +
+               "- board_independence_pct (percentage of independent directors on the board)\n" +
+               "- energy_intensity (energy consumption per unit of revenue or output)\n\n" +
+               "Report text:\n" + excerpt;
+    }
+
+    private static String buildReportAnalysisPrompt(AiRecommendationRequest req) {
+        Map<String, Object> details = req.getDetails();
+        String excerpt = details != null && details.containsKey("report_excerpt")
+                ? details.get("report_excerpt").toString() : "";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("You are an ESG analyst. Analyse the following excerpt from a sustainability/ESG report ");
+        sb.append("and provide 3 to 5 specific, actionable insights about the company's ESG performance. ");
+        sb.append("Focus on strengths, weaknesses, and improvement areas based on the data present. ");
+        sb.append("Each insight must be one concise sentence. ");
+        sb.append("Return only the bullet points, no preamble, no numbering. Start each line with a dash (-).\n\n");
+        sb.append("Report excerpt:\n").append(excerpt);
+        return sb.toString();
     }
 
     private static String buildResultPrompt(AiRecommendationRequest req) {

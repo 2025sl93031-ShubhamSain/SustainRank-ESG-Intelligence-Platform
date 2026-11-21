@@ -20,6 +20,7 @@ Closes #<!-- issue number -->
 - [ ] `mvn test` passes in `backend/`
 - [ ] No secrets, `application.properties`, or AI API keys committed
 - [ ] If AI feature touched: `ai.api-key` is not hardcoded anywhere in source
+- [ ] If report analysis touched: no real PDF reports or proprietary ESG data committed
 - [ ] Screenshots attached for any UI changes
 - [ ] I have read [CONTRIBUTING.md](../CONTRIBUTING.md)
 
