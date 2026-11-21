@@ -34,7 +34,7 @@ This Code of Conduct applies within all community spaces, and also applies when 
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behaviour may be reported to the project maintainers at **2025sl93031@wilp.bits-pilani.ac.in**, **2025sl93003@wilp.bits-pilani.ac.in**, or **2025sl93001@wilp.bits-pilani.ac.in**. All complaints will be reviewed and investigated promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behaviour may be reported to the project maintainer at **2025sl93031@wilp.bits-pilani.ac.in**. All complaints will be reviewed and investigated promptly and fairly.
 
 ## Attribution
 

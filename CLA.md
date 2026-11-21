@@ -1,7 +1,7 @@
 # Contributor License Agreement
 
 **Project:** SustainRank — ESG Intelligence Platform
-**Maintainers:** Shubham Sain <2025sl93031@wilp.bits-pilani.ac.in>, Shatakshi <2025sl93003@wilp.bits-pilani.ac.in>, Shubham Maurya <2025sl93001@wilp.bits-pilani.ac.in>
+**Maintainer:** Shubham Sain <2025sl93031@wilp.bits-pilani.ac.in>
 **License:** MIT
 
 Thank you for your interest in contributing to SustainRank. By submitting a
