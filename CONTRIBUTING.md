@@ -15,7 +15,6 @@ Thank you for considering contributing! This project is open source under the MI
     - [Bug fixes \& small improvements](#bug-fixes--small-improvements)
     - [New features](#new-features)
     - [Documentation](#documentation)
-  - [Open an issue to discuss what changes you are introducing before submitting a PR. Describe the section being updated.](#open-an-issue-to-discuss-what-changes-you-are-introducing-before-submitting-a-pr-describe-the-section-being-updated)
   - [Branch Naming](#branch-naming)
   - [Commit Messages](#commit-messages)
   - [Pull Request Checklist](#pull-request-checklist)
@@ -54,6 +53,7 @@ Open an **issue first** to discuss the idea before writing code. This avoids dup
 
 ### Documentation
 Open an issue to discuss what changes you are introducing before submitting a PR. Describe the section being updated.
+
 ---
 
 ## Branch Naming

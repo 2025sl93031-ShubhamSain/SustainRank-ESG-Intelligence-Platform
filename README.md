@@ -248,7 +248,7 @@ Demo accounts after seeding:
 
 | Username | Password | Company |
 |----------|----------|---------|
-| `testuser` | `test123` | Shubham Industries |
+| `testuser` | `test123` | A-Company |
 
 
 ### 9. Register your own account

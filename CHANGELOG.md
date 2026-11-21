@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `LOWER_IS_BETTER` polarity set — carbon, waste, scope 1/2/3, energy intensity correctly show "above average" when their values are *lower* than the sector average
 - **`ReportAnalysisPage.jsx`** — drag-and-drop PDF upload, completeness progress bar with missing indicator chips, benchmark-colored metric cards (green/amber/red left border + percentile badge), horizontal bar chart (Chart.js) comparing extracted values vs industry average, AI insights panel
 - **Download Report** button — generates a styled A4 PDF via jsPDF with header banner, summary badges, metrics+benchmarks table, and AI insights blocks
-- `ReportServiceTest.java` — 17 unit tests covering `detectReportType`, `STANDARD_INDICATORS` contents, `calculateCompleteness` (100%/0%/partial), `buildBenchmarks` (status polarity, on-par tolerance, percentile bands, unknown metric skip), and `analyseReport` integration with mocked AI
+- `ReportServiceTest.java` — 20 unit tests covering `detectReportType`, `STANDARD_INDICATORS` contents, `calculateCompleteness` (100%/0%/partial), `buildBenchmarks` (status polarity, on-par tolerance, percentile bands, unknown metric skip), and `analyseReport` integration with mocked AI
 
 ### Changed
 - `ReportAnalysisResult.java` — added `completenessScore`, `foundIndicators`, `missingIndicators`, `benchmarks` fields; added `BenchmarkResult` inner class
