@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import AiRecommendations from '../components/AiRecommendations'
 import { getResultRecommendations } from '../api/ai'
+import './AggResultPage.css'
 
 function scoreColor(val) {
   const n = parseFloat(val)

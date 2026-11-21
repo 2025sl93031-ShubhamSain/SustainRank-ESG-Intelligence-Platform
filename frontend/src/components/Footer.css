@@ -1,0 +1,169 @@
+/* ===================================================
+   FOOTER
+   =================================================== */
+.footer.dark-background {
+  background: linear-gradient(135deg, #0a0f1e 0%, #111827 100%) !important;
+  border-top: 1px solid rgba(255,74,23,0.2);
+  padding-top: 60px;
+}
+
+.footer .sitename {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  text-shadow: 0 0 16px rgba(255,74,23,0.45);
+}
+
+.footer .footer-contact p {
+  color: #9ca3af;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+.footer h4 {
+  color: #fff !important;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.footer h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 32px;
+  height: 2px;
+  background: #ff4a17;
+  border-radius: 1px;
+}
+
+.footer .footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer .footer-links ul li {
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer .footer-links ul a {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  transition: color 0.25s;
+  text-decoration: none;
+}
+
+.footer .footer-links ul a:hover {
+  color: #ff4a17;
+}
+
+.footer .footer-links ul i {
+  color: #ff4a17;
+  font-size: 0.7rem;
+}
+
+.footer .social-links {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.footer .social-links a {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 0.85rem;
+  transition: all 0.25s;
+  text-decoration: none;
+}
+
+.footer .social-links a:hover {
+  background: #ff4a17;
+  border-color: #ff4a17;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.footer .footer-newsletter .newsletter-form {
+  display: flex;
+  gap: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.footer .footer-newsletter .newsletter-form input[type="email"] {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: none;
+  padding: 10px 16px;
+  color: #fff;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.footer .footer-newsletter .newsletter-form input[type="email"]::placeholder {
+  color: #6b7280;
+}
+
+.footer .footer-newsletter .newsletter-form input[type="submit"] {
+  background: #ff4a17;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer .footer-newsletter .newsletter-form input[type="submit"]:hover {
+  background: #d63c0f;
+}
+
+.footer .footer-newsletter p {
+  color: #6b7280;
+  font-size: 0.88rem;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.footer .copyright {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 20px 0;
+  margin-top: 40px;
+}
+
+.footer .credits {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.footer .credits a {
+  color: #ff4a17;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer .credits a:hover {
+  color: #ff6a3d;
+}

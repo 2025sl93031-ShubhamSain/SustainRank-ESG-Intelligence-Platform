@@ -5,6 +5,7 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
+import './ReportAnalysisPage.css'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend)
 

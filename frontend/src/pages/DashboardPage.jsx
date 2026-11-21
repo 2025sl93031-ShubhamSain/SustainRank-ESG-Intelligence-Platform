@@ -9,6 +9,7 @@ import { getDashboardData } from '../api/dashboard'
 import { useAuth } from '../context/AuthContext'
 import AiRecommendations from '../components/AiRecommendations'
 import { getDashboardRecommendations } from '../api/ai'
+import './DashboardPage.css'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend)
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import './Header.css'
 
 const NAV_LINKS = [
   { label: 'Home',        to: '/',           type: 'link' },
