@@ -14,7 +14,9 @@
 
 If you discover a security vulnerability, please email:
 
-📧 **2025sl93031@wilp.bits-pilani.ac.in**
+📧 **2025sl93031@wilp.bits-pilani.ac.in**  
+📧 **2025sl93003@wilp.bits-pilani.ac.in**  
+📧 **2025sl93001@wilp.bits-pilani.ac.in**
 
 Include in your report:
 - A description of the vulnerability

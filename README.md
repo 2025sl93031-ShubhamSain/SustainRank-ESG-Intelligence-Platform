@@ -407,7 +407,13 @@ This project is licensed under the [MIT License](./LICENSE).
 
 ---
 
-## Author
+## Authors
 
 **Shubham Sain**  
 [![GitHub](https://img.shields.io/badge/GitHub-2025sl93031--ShubhamSain-black?logo=github)](https://github.com/2025sl93031-ShubhamSain)  
+
+**Shatakshi**  
+[![GitHub](https://img.shields.io/badge/GitHub-2025sl93003--shatakshi-black?logo=github)](https://github.com/2025sl93003-shatakshi)  
+
+**Shubham Maurya**  
+[![GitHub](https://img.shields.io/badge/GitHub-2025sl93001bits-black?logo=github)](https://github.com/2025sl93001bits)  
