@@ -15,6 +15,17 @@ public class OpenAiProvider implements AiProvider {
 
     @Override
     public List<String> getRecommendations(AiRecommendationRequest request) {
+        var response = callApi(request, 400);
+        return AiResponseParser.parseOpenAi(response);
+    }
+
+    @Override
+    public Map<String, Double> extractMetrics(AiRecommendationRequest request) {
+        var response = callApi(request, 600);
+        return AiResponseParser.parseJsonOpenAi(response);
+    }
+
+    private Map<?, ?> callApi(AiRecommendationRequest request, int maxTokens) {
         String baseUrl = config.getBaseUrl().isBlank()
                 ? "https://api.openai.com"
                 : config.getBaseUrl();
@@ -29,16 +40,14 @@ public class OpenAiProvider implements AiProvider {
 
         Map<String, Object> body = Map.of(
                 "model", config.getModel(),
-                "max_tokens", 400,
+                "max_tokens", maxTokens,
                 "messages", List.of(Map.of("role", "user", "content", AiPromptBuilder.build(request)))
         );
 
-        var response = client.post()
+        return client.post()
                 .uri("/v1/chat/completions")
                 .body(body)
                 .retrieve()
                 .body(Map.class);
-
-        return AiResponseParser.parseOpenAi(response);
     }
 }

@@ -79,10 +79,15 @@ public class ReportService {
 
     public ReportAnalysisResult analyseReport(MultipartFile file, String username) throws IOException {
         String text = extractText(file);
-        Map<String, Object> extracted = extractMetrics(text);
-        Map<String, Object> manual = getManualMetrics(username);
-        List<MetricDiff> diffs = buildDiff(extracted, manual);
-        List<String> insights = getAiInsights(text, extracted, username);
+
+        // AI is the primary extractor; regex fills any gaps AI missed or returned null for
+        Map<String, Object> aiExtracted  = extractMetricsWithAi(text);
+        Map<String, Object> regexExtracted = extractMetrics(text);
+        Map<String, Object> extracted = mergeExtracted(aiExtracted, regexExtracted);
+
+        Map<String, Object> manual   = getManualMetrics(username);
+        List<MetricDiff>    diffs    = buildDiff(extracted, manual);
+        List<String>        insights = getAiInsights(text, extracted, username);
 
         ReportAnalysisResult result = new ReportAnalysisResult();
         result.setExtractedMetrics(extracted);
@@ -93,6 +98,38 @@ public class ReportService {
         calculateCompleteness(result, extracted);
         result.setBenchmarks(buildBenchmarks(extracted));
         return result;
+    }
+
+    // AI-first extraction — asks the AI to return a JSON map of all 15 indicators
+    private Map<String, Object> extractMetricsWithAi(String text) {
+        try {
+            String truncated = text.length() > 6000 ? text.substring(0, 6000) : text;
+            AiRecommendationRequest req = new AiRecommendationRequest();
+            req.setType("report_extraction");
+            Map<String, Object> details = new LinkedHashMap<>();
+            details.put("report_excerpt", truncated);
+            req.setDetails(details);
+
+            Map<String, Double> aiResult = aiProvider.extractMetrics(req);
+            Map<String, Object> metrics = new LinkedHashMap<>();
+            aiResult.forEach((k, v) -> {
+                if (v != null && STANDARD_INDICATORS.contains(k)) {
+                    metrics.put(k, v);
+                }
+            });
+            log.info("AI extracted {} metrics from report", metrics.size());
+            return metrics;
+        } catch (Exception e) {
+            log.warn("AI metric extraction failed, falling back to regex: {}", e.getMessage());
+            return Collections.emptyMap();
+        }
+    }
+
+    // Merge: AI values take priority; regex fills keys not found by AI
+    private Map<String, Object> mergeExtracted(Map<String, Object> ai, Map<String, Object> regex) {
+        Map<String, Object> merged = new LinkedHashMap<>(ai);
+        regex.forEach((k, v) -> merged.putIfAbsent(k, v));
+        return merged;
     }
 
     private String extractText(MultipartFile file) throws IOException {
