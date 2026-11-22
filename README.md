@@ -29,6 +29,35 @@ SustainRank lets organisations measure, benchmark and improve their ESG (Environ
 
 ---
 
+## Screenshots
+
+<div align="center">
+
+**Home — Hero**
+<img src="./App images/Screenshot 2026-11-22 at 8.45.00 PM.png" alt="SustainRank Home" width="800" />
+
+**Home — Platform Overview**
+<img src="./App images/Screenshot 2026-11-22 at 8.45.09 PM.png" alt="Platform Overview" width="800" />
+
+**Full ESG Assessment Wizard**
+<img src="./App images/Screenshot 2026-11-22 at 8.45.17 PM.png" alt="Assessment Wizard" width="800" />
+
+**Performance Dashboard**
+<img src="./App images/Screenshot 2026-11-22 at 8.45.50 PM.png" alt="Performance Dashboard" width="800" />
+
+**17 UN SDG Goals Index**
+<img src="./App images/Screenshot 2026-11-22 at 8.46.06 PM.png" alt="SDG Goals Index" width="800" />
+
+**ESG Report Analysis — Completeness & Metrics**
+<img src="./App images/Screenshot 2026-11-22 at 8.46.42 PM.png" alt="ESG Report Analysis" width="800" />
+
+**ESG Report Analysis — Benchmarking Chart**
+<img src="./App images/Screenshot 2026-11-22 at 8.46.49 PM.png" alt="Benchmarking Chart" width="800" />
+
+</div>
+
+---
+
 ## Features
 
 - **Full ESG Assessment Wizard** — Unified 6-step flow (Organisation → Carbon → Energy → Waste → Social → Financial) replacing five separate calculators; jump between steps freely, visual completion indicators per step
