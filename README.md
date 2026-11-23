@@ -180,3 +180,10 @@ This project is licensed under the [MIT License](./LICENSE).
 **Shubham Maurya**  
 [![GitHub](https://img.shields.io/badge/GitHub-2025sl93001bits-black?logo=github)](https://github.com/2025sl93001bits)  
 
+---
+
+## Contributors
+
+![Contributors](https://contrib.rocks/image?repo=2025sl93031-ShubhamSain/SustainRank-ESG-Intelligence-Platform)
+
+Made with [contrib.rocks](https://contrib.rocks).
