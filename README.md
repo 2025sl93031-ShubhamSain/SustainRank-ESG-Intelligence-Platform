@@ -184,4 +184,4 @@ This project is licensed under the [MIT License](./LICENSE).
 
 ## Contributors
 
-![Contributors](https://contrib.rocks/image?repo=2025sl93031-ShubhamSain/SustainRank-ESG-Intelligence-Platform)
+[![Contributors]("https://contrib.rocks/image?repo=2025sl93031-ShubhamSain/SustainRank-ESG-Intelligence-Platform")](https://github.com/2025sl93031-ShubhamSain/SustainRank-ESG-Intelligence-Platform/graphs/contributors)
