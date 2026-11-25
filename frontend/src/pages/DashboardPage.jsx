@@ -319,7 +319,7 @@ export default function DashboardPage() {
                 <table className="db-table">
                   <thead>
                     <tr>
-                      {['RANK', 'COMPANY', 'INDUSTRY', 'ROI', 'SUSTAINABILITY', 'CBR', 'SOCIAL'].map(h => (
+                      {['RANK', 'COMPANY', 'INDUSTRY', 'SUSTAINABILITY'].map(h => (
                         <th key={h} className={h === 'RANK' ? 'center' : ''}>{h}</th>
                       ))}
                     </tr>
@@ -340,7 +340,6 @@ export default function DashboardPage() {
                             </div>
                           </td>
                           <td className="db-table__industry">{co.industry || '—'}</td>
-                          <td className="db-table__roi">{co.roi != null ? `${(+co.roi).toFixed(1)}%` : '—'}</td>
                           <td>
                             <div className="db-table__sus-cell">
                               <div className="db-table__sus-bar-track">
@@ -349,13 +348,11 @@ export default function DashboardPage() {
                               <span>{co.sustainability_score ?? '—'}</span>
                             </div>
                           </td>
-                          <td>{co.cost_benefit != null ? (+co.cost_benefit).toFixed(2) : '—'}</td>
-                          <td>{co.eevta_score ?? '—'}</td>
                         </tr>
                       )
                     })}
                     {currentRanking.length === 0 && (
-                      <tr><td colSpan={7} className="db-table__empty">No data available</td></tr>
+                      <tr><td colSpan={4} className="db-table__empty">No data available</td></tr>
                     )}
                   </tbody>
                 </table>

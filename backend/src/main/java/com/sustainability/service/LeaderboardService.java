@@ -21,8 +21,15 @@ public class LeaderboardService {
     }
 
     public List<Map<String, Object>> getLeaderboard() {
-        List<AppUser> users = userRepository.findAll();
+        return buildRows(true);
+    }
 
+    public List<Map<String, Object>> getPublicLeaderboard() {
+        return buildRows(false);
+    }
+
+    private List<Map<String, Object>> buildRows(boolean adminView) {
+        List<AppUser> users = userRepository.findAll();
         List<Map<String, Object>> rows = new ArrayList<>();
 
         for (AppUser user : users) {
@@ -44,15 +51,19 @@ public class LeaderboardService {
             Map<String, Object> row = new LinkedHashMap<>();
             row.put("username", user.getUsername());
             row.put("sustainability_score", latest.getSustainabilityScore());
-            row.put("carbon_emissions", latest.getCarbonEmissions());
-            row.put("energy_consumption", latest.getEnergyConsumption());
-            row.put("waste_production", latest.getWasteProduction());
-            row.put("roi", latest.getRoi());
-            row.put("environmental_score", latest.getEnvironmentalScore());
-            row.put("social_score", latest.getSocialScore());
             row.put("trend", trend);
             row.put("trend_score", trendScore);
             row.put("last_updated", latest.getCreatedAt());
+
+            if (adminView) {
+                row.put("carbon_emissions", latest.getCarbonEmissions());
+                row.put("energy_consumption", latest.getEnergyConsumption());
+                row.put("waste_production", latest.getWasteProduction());
+                row.put("roi", latest.getRoi());
+                row.put("environmental_score", latest.getEnvironmentalScore());
+                row.put("social_score", latest.getSocialScore());
+            }
+
             rows.add(row);
         }
 

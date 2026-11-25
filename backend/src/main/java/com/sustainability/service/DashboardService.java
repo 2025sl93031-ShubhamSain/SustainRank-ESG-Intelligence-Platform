@@ -27,6 +27,7 @@ public class DashboardService {
     }
 
     public Map<String, Object> getDashboard(AppUser user) {
+        String currentUsername = user.getUsername();
         SustainabilityProfile yourProfile = profileService.getOrCreateProfile(user);
 
         // Your company data
@@ -39,10 +40,10 @@ public class DashboardService {
         List<SustainabilityProfile> byComposite = profileRepository.findAllOrderByCompositeScoreDesc();
 
         Map<String, List<Map<String, Object>>> sortedData = new LinkedHashMap<>();
-        sortedData.put("sustainability_score", toRankingList(byScore));
-        sortedData.put("roi",                  toRankingList(byRoi));
-        sortedData.put("cost_benefit",         toRankingList(byCb));
-        sortedData.put("composite_score",      toCompositeRankingList(byComposite));
+        sortedData.put("sustainability_score", toRankingList(byScore, currentUsername));
+        sortedData.put("roi",                  toRankingList(byRoi, currentUsername));
+        sortedData.put("cost_benefit",         toRankingList(byCb, currentUsername));
+        sortedData.put("composite_score",      toCompositeRankingList(byComposite, currentUsername));
 
         // My rank
         Map<String, Object> myRank = new LinkedHashMap<>();
@@ -117,33 +118,48 @@ public class DashboardService {
         return m;
     }
 
-    private List<Map<String, Object>> toRankingList(List<SustainabilityProfile> profiles) {
+    private List<Map<String, Object>> toRankingList(List<SustainabilityProfile> profiles, String currentUsername) {
         List<Map<String, Object>> list = new ArrayList<>();
         for (SustainabilityProfile p : profiles) {
+            boolean isMe = p.getUser().getUsername().equals(currentUsername);
             Map<String, Object> m = new LinkedHashMap<>();
             m.put("id",                   p.getId());
             m.put("company_name",         p.getCompanyName());
             m.put("user__username",       p.getUser().getUsername());
-            m.put("roi",                  p.getRoi());
             m.put("sustainability_score", p.getSustainabilityScore());
-            m.put("cost_benefit",         p.getCostBenefit());
-            m.put("carbon_score",         p.getCarbonScore());
             m.put("industry",             p.getIndustry());
-            m.put("eevta_score",          p.getEevtaScore());
-            m.put("environmental_score",  p.getEnvironmentalScore());
-            m.put("social_score",         p.getSocialScore());
+            // Sensitive fields — only visible to the company itself
+            if (isMe) {
+                m.put("roi",                  p.getRoi());
+                m.put("cost_benefit",         p.getCostBenefit());
+                m.put("carbon_score",         p.getCarbonScore());
+                m.put("eevta_score",          p.getEevtaScore());
+                m.put("environmental_score",  p.getEnvironmentalScore());
+                m.put("social_score",         p.getSocialScore());
+            } else {
+                m.put("roi",                  null);
+                m.put("cost_benefit",         null);
+                m.put("carbon_score",         null);
+                m.put("eevta_score",          null);
+                m.put("environmental_score",  null);
+                m.put("social_score",         null);
+            }
             list.add(m);
         }
         return list;
     }
 
-    private List<Map<String, Object>> toCompositeRankingList(List<SustainabilityProfile> profiles) {
-        List<Map<String, Object>> list = toRankingList(profiles);
+    private List<Map<String, Object>> toCompositeRankingList(List<SustainabilityProfile> profiles, String currentUsername) {
+        List<Map<String, Object>> list = toRankingList(profiles, currentUsername);
         for (Map<String, Object> m : list) {
             double ss  = (Double) m.get("sustainability_score");
-            double roi = (Double) m.get("roi");
-            double cb  = (Double) m.get("cost_benefit");
-            m.put("composite_score", round(ss * 0.50 + roi * 0.30 + cb * 0.20, 4));
+            Double roi = (Double) m.get("roi");
+            Double cb  = (Double) m.get("cost_benefit");
+            if (roi != null && cb != null) {
+                m.put("composite_score", round(ss * 0.50 + roi * 0.30 + cb * 0.20, 4));
+            } else {
+                m.put("composite_score", null);
+            }
         }
         return list;
     }
