@@ -7,5 +7,6 @@ public class HashGenerator {
         BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
         System.out.println("testuser12: " + enc.encode("testuser12"));
         System.out.println("demo12345:  " + enc.encode("demo12345"));
+        System.out.println("admin123:   " + enc.encode("admin123"));
     }
 }

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/admin")
 public class AdminController {
 
     private final LeaderboardService leaderboardService;
@@ -19,8 +18,15 @@ public class AdminController {
         this.leaderboardService = leaderboardService;
     }
 
-    @GetMapping("/leaderboard/")
-    public ResponseEntity<List<Map<String, Object>>> leaderboard() {
+    // Admin only — full data (carbon, energy, waste, ROI, E/S scores)
+    @GetMapping("/api/admin/leaderboard/")
+    public ResponseEntity<List<Map<String, Object>>> adminLeaderboard() {
         return ResponseEntity.ok(leaderboardService.getLeaderboard());
+    }
+
+    // All authenticated users — rank, username, score, trend only
+    @GetMapping("/api/leaderboard/")
+    public ResponseEntity<List<Map<String, Object>>> publicLeaderboard() {
+        return ResponseEntity.ok(leaderboardService.getPublicLeaderboard());
     }
 }

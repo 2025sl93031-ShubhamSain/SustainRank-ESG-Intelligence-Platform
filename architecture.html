@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SustainRank — Architecture Diagram</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f1f5f9; color: #1e293b; overflow: hidden; }
+
+  /* ── toolbar ── */
+  .toolbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 48px;
+    background: #ffffff; border-bottom: 1px solid #e2e8f0;
+    display: flex; align-items: center; padding: 0 20px; gap: 12px; z-index: 100;
+  }
+  .toolbar h1 { font-size: 0.95rem; font-weight: 700; color: #0f172a; }
+  .toolbar span { font-size: 0.75rem; color: #94a3b8; }
+  .toolbar button {
+    background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px;
+    padding: 4px 10px; font-size: 0.8rem; cursor: pointer; color: #475569;
+  }
+  .toolbar button:hover { background: #e2e8f0; }
+  .toolbar .sep { width: 1px; height: 20px; background: #e2e8f0; }
+
+  /* ── canvas ── */
+  .canvas {
+    position: fixed; top: 48px; left: 0; right: 0; bottom: 0;
+    overflow: auto; cursor: grab;
+  }
+  .canvas:active { cursor: grabbing; }
+  .inner {
+    width: 1800px; min-height: 1100px;
+    padding: 40px; position: relative;
+    transform-origin: top left;
+  }
+
+  /* ── swim lane ── */
+  .lane {
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;
+    margin-bottom: 16px; overflow: hidden;
+  }
+  .lane-header {
+    padding: 10px 20px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .lane-body { padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+
+  /* lane colours */
+  .lane-browser  .lane-header { background: #eff6ff; color: #1d4ed8; border-bottom: 1px solid #bfdbfe; }
+  .lane-security .lane-header { background: #fff7ed; color: #c2410c; border-bottom: 1px solid #fed7aa; }
+  .lane-ctrl     .lane-header { background: #f0fdf4; color: #15803d; border-bottom: 1px solid #bbf7d0; }
+  .lane-service  .lane-header { background: #fefce8; color: #a16207; border-bottom: 1px solid #fef08a; }
+  .lane-report   .lane-header { background: #fdf4ff; color: #7e22ce; border-bottom: 1px solid #e9d5ff; }
+  .lane-ai       .lane-header { background: #fff1f2; color: #be123c; border-bottom: 1px solid #fecdd3; }
+  .lane-db       .lane-header { background: #f0f9ff; color: #0369a1; border-bottom: 1px solid #bae6fd; }
+
+  /* ── boxes ── */
+  .box {
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 0.78rem; cursor: pointer; position: relative;
+    border: 1px solid transparent; transition: box-shadow 0.15s, transform 0.15s;
+    min-width: 140px; max-width: 200px;
+  }
+  .box:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-1px); }
+  .box .title { font-weight: 700; font-size: 0.8rem; margin-bottom: 3px; }
+  .box .sub   { font-size: 0.7rem; opacity: 0.7; line-height: 1.4; }
+
+  /* box colours */
+  .b-blue   { background: #eff6ff; border-color: #93c5fd; color: #1e40af; }
+  .b-orange { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
+  .b-green  { background: #f0fdf4; border-color: #86efac; color: #166534; }
+  .b-yellow { background: #fefce8; border-color: #fde047; color: #854d0e; }
+  .b-purple { background: #fdf4ff; border-color: #d8b4fe; color: #6b21a8; }
+  .b-red    { background: #fff1f2; border-color: #fda4af; color: #9f1239; }
+  .b-sky    { background: #f0f9ff; border-color: #7dd3fc; color: #075985; }
+  .b-gray   { background: #f8fafc; border-color: #cbd5e1; color: #334155; }
+
+  /* ── arrows ── */
+  .arrows { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+  /* ── tooltip ── */
+  .tooltip {
+    position: fixed; background: #0f172a; color: #f1f5f9;
+    border-radius: 8px; padding: 10px 14px; font-size: 0.78rem;
+    max-width: 300px; line-height: 1.6; z-index: 999;
+    pointer-events: none; opacity: 0; transition: opacity 0.15s;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .tooltip.show { opacity: 1; }
+  .tooltip strong { color: #60a5fa; display: block; margin-bottom: 4px; }
+
+  /* ── legend ── */
+  .legend {
+    position: fixed; bottom: 20px; right: 20px;
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 12px 16px; font-size: 0.72rem; color: #64748b; z-index: 100;
+  }
+  .legend h4 { font-size: 0.72rem; font-weight: 700; color: #334155; margin-bottom: 8px; }
+  .leg-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .leg-dot { width: 10px; height: 10px; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <h1>🌍 SustainRank — Architecture Diagram</h1>
+  <span>Hover over any component for details</span>
+  <div class="sep"></div>
+  <button onclick="zoom(1.1)">＋ Zoom In</button>
+  <button onclick="zoom(0.9)">－ Zoom Out</button>
+  <button onclick="resetZoom()">Reset</button>
+</div>
+
+<div class="canvas" id="canvas">
+<div class="inner" id="inner">
+
+  <!-- SVG arrows -->
+  <svg class="arrows" id="svg" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr-blue"   markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/></marker>
+      <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f97316"/></marker>
+      <marker id="arr-green"  markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#22c55e"/></marker>
+      <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#a855f7"/></marker>
+      <marker id="arr-red"    markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/></marker>
+      <marker id="arr-sky"    markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0ea5e9"/></marker>
+    </defs>
+  </svg>
+
+  <!-- Lane 1: Browser / Frontend -->
+  <div class="lane lane-browser" id="lane-browser">
+    <div class="lane-header">🖥️ Browser / Frontend — React 19 + Vite 8</div>
+    <div class="lane-body">
+      <div class="box b-blue" data-tip="<strong>LoginPage.jsx / RegisterPage.jsx</strong>Two-panel layout. Sends POST /api/login or /api/register. JWT token stored in localStorage via AuthContext.">LoginPage<br/>RegisterPage<div class="sub">Auth forms</div></div>
+      <div class="box b-blue" data-tip="<strong>AssessmentWizard.jsx</strong>6-step unified wizard: Organisation → Carbon → Energy → Waste → Social → Financial. Fires 5 API calls on final step. Step indicator with green tick / amber warning / blue active states.">AssessmentWizard<div class="sub">6-step ESG flow</div></div>
+      <div class="box b-blue" data-tip="<strong>AggResultPage.jsx</strong>Shows composite ESG score after wizard completes. Calls POST /api/ai/result to get AI recommendations. Renders ResultCard with score breakdown.">AggResultPage<div class="sub">Score results + AI</div></div>
+      <div class="box b-blue" data-tip="<strong>DashboardPage.jsx</strong>Calls GET /api/dashboard. Shows live leaderboard rankings, radar chart (Chart.js), change-vs-last-run metrics, and AI recommendations via POST /api/ai/dashboard.">DashboardPage<div class="sub">Rankings + Radar chart</div></div>
+      <div class="box b-blue" data-tip="<strong>LeaderboardPage.jsx</strong>Shows full competitive leaderboard with all registered companies ranked by sustainability score. Sortable columns.">LeaderboardPage<div class="sub">Full rankings table</div></div>
+      <div class="box b-blue" data-tip="<strong>ReportAnalysisPage.jsx</strong>Drag-and-drop PDF upload. Calls POST /api/reports/analyse. Shows completeness bar (X/15 indicators), missing indicator chips, benchmark metric cards (green/amber/red), horizontal bar chart vs industry average, AI insights, Download PDF button.">ReportAnalysisPage<div class="sub">PDF upload + benchmarks</div></div>
+      <div class="box b-blue" data-tip="<strong>HistoryPage.jsx</strong>Calls GET /api/history. Shows last 20 calculation runs with filter bar: date range picker + metric chip filters. Delete individual records.">HistoryPage<div class="sub">Last 20 runs + filters</div></div>
+      <div class="box b-blue" data-tip="<strong>ProfilePage.jsx</strong>Calls GET/PUT /api/profile. Edit company name, industry, employee count. Change password section with show/hide toggles. User chip in header links here.">ProfilePage<div class="sub">Company settings</div></div>
+      <div class="box b-blue" data-tip="<strong>IndexPage.jsx</strong>Home page — hero section, platform overview cards, feature tabs, 17 SDG goal grid with interactive cards linking to UN documentation, contact section.">IndexPage<div class="sub">Home + 17 SDGs</div></div>
+      <div class="box b-gray" data-tip="<strong>AuthContext.jsx</strong>React context providing JWT token, user info, login() and logout() functions to all pages. Stores token in localStorage. Used by axiosInstance to inject Bearer header automatically.">AuthContext<div class="sub">JWT state + provider</div></div>
+      <div class="box b-gray" data-tip="<strong>axiosInstance.js</strong>Axios instance with base URL and request interceptor that automatically adds Authorization: Bearer {token} header to every API call. Shared across all API modules.">axiosInstance<div class="sub">JWT Bearer interceptor</div></div>
+      <div class="box b-gray" data-tip="<strong>AiRecommendations.jsx</strong>Reusable component used on AggResultPage, DashboardPage, and ReportAnalysisPage. Shows loading spinner, renders bullet list of AI recommendations, graceful empty state when unavailable.">AiRecommendations<div class="sub">Reusable AI component</div></div>
+    </div>
+  </div>
+
+  <!-- Lane 2: Spring Security -->
+  <div class="lane lane-security" id="lane-security">
+    <div class="lane-header">🔐 Spring Security Layer</div>
+    <div class="lane-body">
+      <div class="box b-orange" data-tip="<strong>SecurityConfig.java</strong>Spring Security filter chain configuration. Disables CSRF, sets stateless session policy, configures public endpoints (/api/login, /api/register) and protects all others with JWT. Adds JwtAuthFilter before UsernamePasswordAuthenticationFilter.">SecurityConfig<div class="sub">Filter chain + CORS</div></div>
+      <div class="box b-orange" data-tip="<strong>JwtAuthFilter.java</strong>OncePerRequestFilter that runs on every request. Extracts Bearer token from Authorization header, validates it via JwtUtil, loads UserDetails, and sets SecurityContext. If token is missing or invalid, request proceeds unauthenticated.">JwtAuthFilter<div class="sub">Token validation filter</div></div>
+      <div class="box b-orange" data-tip="<strong>JwtUtil.java</strong>Utility class using jjwt 0.12.6. generateToken(username) creates HS256 signed JWT with configurable expiry. validateToken() verifies signature and expiry. extractUsername() parses the subject claim.">JwtUtil<div class="sub">HS256 sign + verify</div></div>
+      <div class="box b-orange" data-tip="<strong>JwtConfig.java</strong>@ConfigurationProperties binding jwt.secret and jwt.expiration-ms from application.properties. Provides typed config to JwtUtil.">JwtConfig<div class="sub">Secret + expiry config</div></div>
+      <div class="box b-orange" data-tip="<strong>UserDetailsServiceImpl.java</strong>Implements Spring's UserDetailsService. loadUserByUsername() queries UserRepository and wraps AppUser in Spring's User object with granted authorities. Used by JwtAuthFilter to populate SecurityContext.">UserDetailsServiceImpl<div class="sub">Loads user from DB</div></div>
+      <div class="box b-orange" data-tip="<strong>GlobalExceptionHandler.java</strong>@RestControllerAdvice catching MethodArgumentNotValidException (Bean Validation failures) and returning { success: false, error: '...' } with HTTP 400. Same error shape as all other error responses.">GlobalExceptionHandler<div class="sub">Validation error handler</div></div>
+    </div>
+  </div>
+
+  <!-- Lane 3: REST Controllers -->
+  <div class="lane lane-ctrl" id="lane-ctrl">
+    <div class="lane-header">🌐 REST Controllers — /api/*</div>
+    <div class="lane-body">
+      <div class="box b-green" data-tip="<strong>AuthController.java</strong>POST /api/register — validates RegisterRequest, calls AuthService.register(), returns JWT. POST /api/login — validates LoginRequest, calls AuthService.login(), returns JWT. POST /api/logout — stateless, client removes token. GET /api/me — returns current user info.">AuthController<div class="sub">/register /login /me</div></div>
+      <div class="box b-green" data-tip="<strong>CalculatorController.java</strong>Five endpoints: POST /api/carbon_calculator, /api/energy_calculator, /api/waste_calculator, /api/calculate_eevta_score, /api/sustainability_calculator. Each accepts a typed DTO, calls the corresponding service, saves result to DB via HistoryService.">CalculatorController<div class="sub">5 ESG calculator endpoints</div></div>
+      <div class="box b-green" data-tip="<strong>DashboardController.java</strong>GET /api/dashboard — calls DashboardService to build leaderboard rankings, radar chart data (env/social/gov scores vs industry avg), and change-vs-last-run deltas for the current user.">DashboardController<div class="sub">/dashboard rankings</div></div>
+      <div class="box b-green" data-tip="<strong>HistoryController.java</strong>GET /api/history — returns last 20 calculation runs for the authenticated user. DELETE /api/history/{id} — deletes a specific history record if it belongs to the current user.">HistoryController<div class="sub">/history CRUD</div></div>
+      <div class="box b-green" data-tip="<strong>ProfileController.java</strong>GET /api/profile — returns company name, industry, employee count, username, email. PUT /api/profile — updates profile fields. POST /api/profile/change-password — verifies current password, enforces min 8 chars, updates BCrypt hash.">ProfileController<div class="sub">/profile GET + PUT</div></div>
+      <div class="box b-green" data-tip="<strong>IndexController.java</strong>GET /api/index — returns all 17 SDG goal data from SdgConstants for the home page SDG grid.">IndexController<div class="sub">/index SDG data</div></div>
+      <div class="box b-green" data-tip="<strong>AiController.java</strong>POST /api/ai/result — accepts AiRecommendationRequest, calls AiService, returns { recommendations: [...] }. POST /api/ai/dashboard — same but sets type='dashboard' for dashboard-specific prompt.">AiController<div class="sub">/ai/result /ai/dashboard</div></div>
+      <div class="box b-green" data-tip="<strong>ReportController.java</strong>POST /api/reports/analyse — accepts MultipartFile PDF (max 20MB). Passes to ReportService which extracts text via PDFBox, runs regex + AI extraction, scores completeness, benchmarks vs industry, generates AI insights. Returns ReportAnalysisResult JSON.">ReportController<div class="sub">/reports/analyse PDF</div></div>
+      <div class="box b-green" data-tip="<strong>AdminController.java</strong>Admin-only endpoints for user management. Protected by ROLE_ADMIN check in SecurityConfig.">AdminController<div class="sub">/admin endpoints</div></div>
+    </div>
+  </div>
+
+  <!-- Lane 4: Service Layer -->
+  <div class="lane lane-service" id="lane-service">
+    <div class="lane-header">⚙️ Service Layer — Business Logic</div>
+    <div class="lane-body">
+      <div class="box b-yellow" data-tip="<strong>AuthService.java</strong>register(): checks username/email uniqueness, BCrypt-hashes password, saves AppUser, generates JWT. login(): loads user, verifies BCrypt hash via PasswordEncoder, generates JWT on success.">AuthService<div class="sub">Register + login logic</div></div>
+      <div class="box b-yellow" data-tip="<strong>CarbonCalculatorService.java</strong>Calculates carbon emissions using GHG Protocol emission factors from CalcUtils (grid electricity 0.82, natural gas 2.204, petrol 2.31, diesel 2.68, LPG 1.51, flights, train). Returns carbon score using exponential decay formula.">CarbonCalculatorService<div class="sub">GHG Protocol scoring</div></div>
+      <div class="box b-yellow" data-tip="<strong>EnergyCalculatorService.java</strong>Calculates energy consumption and intensity. Scores renewable percentage and energy efficiency against ISO 50001 benchmarks. Uses higher-is-better formula for renewable pct.">EnergyCalculatorService<div class="sub">ISO 50001 scoring</div></div>
+      <div class="box b-yellow" data-tip="<strong>WasteCalculatorService.java</strong>Calculates waste diversion rate and waste reduction rate. Scores against GRI 306 circular economy benchmarks. Uses lower-is-better formula for total waste.">WasteCalculatorService<div class="sub">GRI 306 scoring</div></div>
+      <div class="box b-yellow" data-tip="<strong>EevtaCalculatorService.java</strong>EEVTA = Education, Employment, Vocational Training & Apprenticeship. Scores workforce development aligned to UN SDG 8. Calculates tech/voc percentage and training investment score.">EevtaCalculatorService<div class="sub">UN SDG 8 social score</div></div>
+      <div class="box b-yellow" data-tip="<strong>SustainabilityScoreService.java</strong>Composite ESG score: Environmental × 0.50 + Social × 0.30 + Governance × 0.20. Saves full SustainabilityProfile to DB. Also calculates ROI and Cost-Benefit Ratio.">SustainabilityScoreService<div class="sub">Composite ESG formula</div></div>
+      <div class="box b-yellow" data-tip="<strong>DashboardService.java</strong>Fetches all SustainabilityProfiles, ranks by sustainability score, computes radar data (each pillar score vs average of that industry), calculates change-vs-last-run deltas by comparing current profile to most recent CalculationHistory entry.">DashboardService<div class="sub">Rankings + radar data</div></div>
+      <div class="box b-yellow" data-tip="<strong>LeaderboardService.java</strong>Returns all companies sorted by sustainability score for the leaderboard page. Includes rank, company name, industry, ROI, sustainability score, CBR, and social score.">LeaderboardService<div class="sub">Sorted leaderboard</div></div>
+      <div class="box b-yellow" data-tip="<strong>HistoryService.java</strong>Saves CalculationHistory record after each calculator run. getHistory() returns last 20 entries for the user ordered by created_at DESC. deleteHistory() checks ownership before deleting.">HistoryService<div class="sub">Save + fetch history</div></div>
+      <div class="box b-yellow" data-tip="<strong>ProfileService.java</strong>getProfile() returns company info. updateProfile() validates and saves name/industry/employees. changePassword() verifies current password with BCrypt, enforces min 8 chars, saves new BCrypt hash.">ProfileService<div class="sub">Profile + password</div></div>
+    </div>
+  </div>
+
+  <!-- Lane 5: Report Pipeline -->
+  <div class="lane lane-report" id="lane-report">
+    <div class="lane-header">📄 ESG Report Analysis Pipeline</div>
+    <div class="lane-body">
+      <div class="box b-purple" data-tip="<strong>ReportService.java</strong>Main orchestrator for PDF analysis. Calls PDFBox to extract text, then runs three stages: (1) regex extraction, (2) AI extraction for missed metrics, (3) completeness scoring, (4) benchmarking. Returns ReportAnalysisResult.">ReportService<div class="sub">Pipeline orchestrator</div></div>
+      <div class="box b-purple" data-tip="<strong>PDFBox (Apache)</strong>PDDocument.load() reads the uploaded PDF. PDFTextStripper.getText() extracts all text content as a string. Text is passed to both regex patterns and AI extraction prompt. Apache 2.0 licensed — chosen over iText which requires commercial license.">PDFBox Extractor<div class="sub">PDF → raw text</div></div>
+      <div class="box b-purple" data-tip="<strong>Regex Extraction</strong>Pattern matching on the extracted text for 7 common ESG metrics: carbon emissions (tCO2e), energy consumption (kWh), renewable energy %, waste (tonnes), recycling rate %, number of employees, revenue. Uses Java regex with numeric capture groups.">Regex Extraction<div class="sub">7 metric patterns</div></div>
+      <div class="box b-purple" data-tip="<strong>AI Extraction (AiPromptBuilder.buildExtractionPrompt)</strong>For metrics not found by regex, sends report excerpt to AI with structured prompt asking for JSON with 15 ESG indicator keys. AiResponseParser.parseJsonContent() extracts the JSON from the response, stripping markdown fences.">AI Extraction<div class="sub">15 indicators via AI</div></div>
+      <div class="box b-purple" data-tip="<strong>calculateCompleteness()</strong>Checks extracted metrics map against STANDARD_INDICATORS list (15 keys). Counts how many were found, sets completenessScore as percentage, populates foundIndicators and missingIndicators lists returned to frontend.">Completeness Scorer<div class="sub">X/15 indicators found</div></div>
+      <div class="box b-purple" data-tip="<strong>buildBenchmarks()</strong>Compares each extracted metric to INDUSTRY_AVG constants (IT/Tech sector). LOWER_IS_BETTER set inverts the above/below logic for carbon, waste, scope emissions, energy intensity. Assigns percentile bands: Top 10%, Top 25%, Mid 50%, Bottom 25%, Bottom 10%.">Benchmarking Engine<div class="sub">vs IT/Tech industry avg</div></div>
+      <div class="box b-purple" data-tip="<strong>ReportAnalysisResult.java</strong>Result DTO with: reportType (BRSR/GRI/Annual/General), extractedMetrics map, completenessScore (0-100), foundIndicators list, missingIndicators list, benchmarks map (metric → BenchmarkResult), aiInsights list. BenchmarkResult inner class: industryAvg, status, percentile, industry.">ReportAnalysisResult<div class="sub">Full analysis DTO</div></div>
+      <div class="box b-purple" data-tip="<strong>jsPDF (frontend)</strong>Download Report button on ReportAnalysisPage generates a styled A4 PDF client-side: header banner, summary badges (completeness score, report type, metrics found), metrics+benchmarks table, AI insights blocks.">jsPDF Download<div class="sub">Client-side PDF export</div></div>
+    </div>
+  </div>
+
+  <!-- Lane 6: AI Layer -->
+  <div class="lane lane-ai" id="lane-ai">
+    <div class="lane-header">🤖 AI Layer — Provider-Agnostic</div>
+    <div class="lane-body">
+      <div class="box b-red" data-tip="<strong>AiConfig.java</strong>@ConfigurationProperties(prefix='ai'). Reads: ai.provider (openai/gemini/anthropic/ollama), ai.api-key, ai.model (e.g. gpt-4o-mini), ai.base-url (optional override for OpenRouter or local Ollama). All 4 fields have defaults so app starts without crashing if AI is not configured.">AiConfig<div class="sub">Provider + key + model</div></div>
+      <div class="box b-red" data-tip="<strong>AiProvider.java (Interface)</strong>Contract: getRecommendations(request) → List&lt;String&gt;. extractMetrics(request) → Map&lt;String, Double&gt; (default returns empty). All providers implement this. Rest of app only depends on this interface — never on a concrete provider directly.">AiProvider (Interface)<div class="sub">getRecommendations()</div></div>
+      <div class="box b-red" data-tip="<strong>AiProviderFactory.java</strong>Spring @Configuration @Bean. Reads ai.provider config, instantiates the right impl: gemini→GeminiProvider, anthropic→AnthropicProvider, default→OpenAiProvider (handles openai + ollama since both use /v1/chat/completions format).">AiProviderFactory<div class="sub">Creates correct provider</div></div>
+      <div class="box b-red" data-tip="<strong>AiPromptBuilder.java</strong>Static utility. build(request) routes to 4 prompt types: (1) result — score+industry+metrics context, (2) dashboard — rank+pillar scores, (3) report_analysis — ESG analyst insights from text, (4) report_extraction — structured JSON extraction of 15 ESG indicators. Each prompt ends with dash-bullet format instruction.">AiPromptBuilder<div class="sub">4 prompt types</div></div>
+      <div class="box b-red" data-tip="<strong>OpenAiProvider.java</strong>Handles OpenAI, Ollama, and OpenRouter (all use /v1/chat/completions). Spring RestClient with Bearer auth header. 400 max_tokens for recommendations, 600 for JSON extraction. Passes to AiResponseParser.parseOpenAi().">OpenAiProvider<div class="sub">OpenAI + Ollama + OpenRouter</div></div>
+      <div class="box b-red" data-tip="<strong>GeminiProvider.java</strong>Google Gemini API. POST /v1beta/models/{model}:generateContent with API key as query param. Different request shape: contents[].parts[].text. Response: candidates[0].content.parts[0].text. Passes to AiResponseParser.parseGemini().">GeminiProvider<div class="sub">Google Gemini API</div></div>
+      <div class="box b-red" data-tip="<strong>AnthropicProvider.java</strong>Anthropic Claude API. POST /v1/messages with anthropic-version header. Request: model, max_tokens, messages[]. Response: content[0].text. Passes to AiResponseParser.parseAnthropic().">AnthropicProvider<div class="sub">Anthropic Claude API</div></div>
+      <div class="box b-red" data-tip="<strong>AiResponseParser.java</strong>Static utility. parseOpenAi/Gemini/Anthropic() navigate provider-specific JSON structure to extract text. parseLines() splits by newline, strips - • * bullet prefixes, returns clean List&lt;String&gt;. parseJsonContent() strips markdown fences, finds {…} block, parses to Map&lt;String, Double&gt; for metric extraction.">AiResponseParser<div class="sub">Parses all 3 response formats</div></div>
+      <div class="box b-red" data-tip="<strong>AiService.java</strong>@Service wrapper. Calls provider.getRecommendations(). Wraps in try-catch — if AI is down, API key missing, or rate limited, logs error and returns empty list. This ensures the app never crashes due to AI unavailability — UI shows 'Recommendations unavailable' gracefully.">AiService<div class="sub">Safe wrapper + error handling</div></div>
+    </div>
+  </div>
+
+  <!-- Lane 7: JPA + DB -->
+  <div class="lane lane-db" id="lane-db">
+    <div class="lane-header">🗄️ JPA Repositories + PostgreSQL 16</div>
+    <div class="lane-body">
+      <div class="box b-sky" data-tip="<strong>UserRepository.java</strong>Spring Data JPA. findByUsername(String) — used by auth and security. existsByUsername(String) + existsByEmail(String) — used by AuthService for uniqueness check on registration. Extends JpaRepository&lt;AppUser, Long&gt;.">UserRepository<div class="sub">findByUsername()</div></div>
+      <div class="box b-sky" data-tip="<strong>SustainabilityProfileRepository.java</strong>findByUserId(Long) — get current user's profile. findAllByOrderBySustainabilityScoreDesc() — leaderboard and dashboard rankings. findByUserIdAndIndustry() — industry-filtered queries. Extends JpaRepository&lt;SustainabilityProfile, Long&gt;.">SustainabilityProfileRepository<div class="sub">Rankings + user profile</div></div>
+      <div class="box b-sky" data-tip="<strong>CalculationHistoryRepository.java</strong>findByUserIdOrderByCreatedAtDesc(Long, Pageable) — last 20 history entries with pagination. Used by HistoryService and DashboardService (change-vs-last-run). Extends JpaRepository&lt;CalculationHistory, Long&gt;.">CalculationHistoryRepository<div class="sub">Last 20 runs per user</div></div>
+      <div class="box b-sky" data-tip="<strong>AppUser entity</strong>Table: app_user. Fields: id (PK), username (unique), email (unique), password (BCrypt hash), role (USER/ADMIN), created_at. @OneToOne with SustainabilityProfile, @OneToMany with CalculationHistory.">AppUser<div class="sub">id · username · email · role</div></div>
+      <div class="box b-sky" data-tip="<strong>SustainabilityProfile entity</strong>Table: sustainability_profile. 30+ fields covering all ESG metrics: carbon_score, energy_total, renewable_pct, total_waste, eevta_score, environmental_score, social_score, sustainability_score, roi, cost_benefit, company_name, industry, num_employees. @OneToOne with AppUser.">SustainabilityProfile<div class="sub">30+ ESG metric fields</div></div>
+      <div class="box b-sky" data-tip="<strong>CalculationHistory entity</strong>Table: calculation_history. Stores snapshot of each calculator run: carbon_emissions, energy_consumption, waste_production, eevta_score, environmental_score, social_score, sustainability_score, roi, cost_benefit, investment, revenue, costs, created_at. @ManyToOne with AppUser and SustainabilityProfile.">CalculationHistory<div class="sub">Run snapshots + timestamps</div></div>
+      <div class="box b-sky" data-tip="<strong>CalcUtils.java</strong>Static constants for all emission factors (GHG Protocol) and scoring benchmarks. ELECTRICITY_FACTOR=0.82, GAS_FACTOR=2.204, PETROL_FACTOR=2.31, DIESEL_FACTOR=2.68. Scoring formula: score = 100 × e^(−0.693 × value/benchmark) for lower-is-better, inverted for higher-is-better.">CalcUtils<div class="sub">Emission factors + formula</div></div>
+      <div class="box b-sky" data-tip="<strong>SdgConstants.java</strong>Static list of all 17 UN Sustainable Development Goals with name, description, and icon data. Returned by IndexController GET /api/index for the home page SDG grid.">SdgConstants<div class="sub">17 SDG goal data</div></div>
+      <div class="box b-sky" data-tip="<strong>PostgreSQL 16</strong>Relational database. Hibernate ddl-auto=update creates/updates schema on boot. 3 tables: app_user, sustainability_profile, calculation_history. seed.sql populates 11 demo companies with 2 history entries each for leaderboard testing.">PostgreSQL 16<div class="sub">3 tables · seed.sql</div></div>
+    </div>
+  </div>
+
+</div><!-- /inner -->
+</div><!-- /canvas -->
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- Legend -->
+<div class="legend">
+  <h4>Layers</h4>
+  <div class="leg-row"><div class="leg-dot" style="background:#3b82f6"></div> Frontend (React)</div>
+  <div class="leg-row"><div class="leg-dot" style="background:#f97316"></div> Spring Security</div>
+  <div class="leg-row"><div class="leg-dot" style="background:#22c55e"></div> REST Controllers</div>
+  <div class="leg-row"><div class="leg-dot" style="background:#eab308"></div> Service Layer</div>
+  <div class="leg-row"><div class="leg-dot" style="background:#a855f7"></div> Report Pipeline</div>
+  <div class="leg-row"><div class="leg-dot" style="background:#ef4444"></div> AI Layer</div>
+  <div class="leg-row"><div class="leg-dot" style="background:#0ea5e9"></div> JPA / Database</div>
+</div>
+
+<script>
+  // ── tooltip ──
+  const tooltip = document.getElementById('tooltip');
+  document.querySelectorAll('.box').forEach(box => {
+    box.addEventListener('mouseenter', e => {
+      tooltip.innerHTML = box.dataset.tip;
+      tooltip.classList.add('show');
+    });
+    box.addEventListener('mousemove', e => {
+      let x = e.clientX + 16, y = e.clientY + 16;
+      if (x + 320 > window.innerWidth) x = e.clientX - 320;
+      if (y + 160 > window.innerHeight) y = e.clientY - 160;
+      tooltip.style.left = x + 'px';
+      tooltip.style.top  = y + 'px';
+    });
+    box.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+  });
+
+  // ── zoom ──
+  let scale = 1;
+  const inner = document.getElementById('inner');
+  function zoom(factor) {
+    scale = Math.min(Math.max(scale * factor, 0.4), 2);
+    inner.style.transform = `scale(${scale})`;
+    inner.style.width = (1800 * scale) + 'px';
+    inner.style.minHeight = (1100 * scale) + 'px';
+  }
+  function resetZoom() {
+    scale = 1;
+    inner.style.transform = '';
+    inner.style.width = '';
+    inner.style.minHeight = '';
+  }
+
+  // ── drag to pan ──
+  const canvas = document.getElementById('canvas');
+  let dragging = false, startX, startY, scrollLeft, scrollTop;
+  canvas.addEventListener('mousedown', e => {
+    if (e.target.classList.contains('box')) return;
+    dragging = true;
+    startX = e.pageX - canvas.offsetLeft;
+    startY = e.pageY - canvas.offsetTop;
+    scrollLeft = canvas.scrollLeft;
+    scrollTop  = canvas.scrollTop;
+  });
+  canvas.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    e.preventDefault();
+    canvas.scrollLeft = scrollLeft - (e.pageX - canvas.offsetLeft - startX);
+    canvas.scrollTop  = scrollTop  - (e.pageY - canvas.offsetTop  - startY);
+  });
+  canvas.addEventListener('mouseup',   () => dragging = false);
+  canvas.addEventListener('mouseleave',() => dragging = false);
+</script>
+</body>
+</html>

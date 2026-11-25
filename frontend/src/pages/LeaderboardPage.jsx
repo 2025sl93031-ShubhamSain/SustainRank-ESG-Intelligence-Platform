@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
-import { getLeaderboard } from '../api/admin'
+import { getLeaderboard, getPublicLeaderboard } from '../api/admin'
 import { useAuth } from '../context/AuthContext'
 
 function scoreColor(val) {
@@ -43,23 +42,27 @@ function RankBadge({ rank }) {
 
 export default function LeaderboardPage() {
   const { user } = useAuth()
-  const navigate = useNavigate()
+  const isAdmin = user?.role === 'ADMIN'
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    if (!user || user.role !== 'ADMIN') {
-      navigate('/', { replace: true })
-      return
-    }
-    getLeaderboard()
+    const fetch = isAdmin ? getLeaderboard : getPublicLeaderboard
+    fetch()
       .then(setRows)
       .catch(() => setError('Failed to load leaderboard.'))
       .finally(() => setLoading(false))
-  }, [user, navigate])
+  }, [isAdmin])
 
-  const cols = [
+  const publicCols = [
+    { key: 'rank',                 label: 'Rank' },
+    { key: 'username',             label: 'Company' },
+    { key: 'sustainability_score', label: 'Sustainability Score' },
+    { key: 'trend',                label: 'Trend' },
+  ]
+
+  const adminCols = [
     { key: 'rank',                 label: 'Rank' },
     { key: 'username',             label: 'User' },
     { key: 'sustainability_score', label: 'Sustainability' },
@@ -72,13 +75,14 @@ export default function LeaderboardPage() {
     { key: 'trend',                label: 'Trend' },
   ]
 
+  const cols = isAdmin ? adminCols : publicCols
+
   return (
     <>
       <Header />
       <div style={{ minHeight: '100vh', background: '#060c1e', padding: '40px 24px 80px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
-          {/* Page header */}
           <div style={{ marginBottom: 32 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
               <div style={{
@@ -91,15 +95,36 @@ export default function LeaderboardPage() {
               <h1 style={{ margin: 0, fontSize: '1.6rem', fontWeight: 800, color: '#fff' }}>
                 ESG Leaderboard
               </h1>
+              {isAdmin && (
+                <span style={{
+                  fontSize: '0.7rem', fontWeight: 700, color: '#f97316',
+                  background: 'rgba(249,115,22,0.15)', border: '1px solid rgba(249,115,22,0.3)',
+                  borderRadius: 4, padding: '2px 8px', letterSpacing: '0.08em',
+                }}>ADMIN VIEW</span>
+              )}
             </div>
             <p style={{ margin: 0, color: 'rgba(255,255,255,0.45)', fontSize: '0.88rem' }}>
-              All users ranked by latest sustainability score — admin view only
+              {isAdmin
+                ? 'Full metrics for all users — admin only'
+                : 'Companies ranked by sustainability score'}
             </p>
           </div>
 
+          {!isAdmin && (
+            <div style={{
+              background: 'rgba(67,97,238,0.08)', border: '1px solid rgba(67,97,238,0.2)',
+              borderRadius: 10, padding: '12px 16px', marginBottom: 24,
+              display: 'flex', alignItems: 'center', gap: 10,
+              color: 'rgba(255,255,255,0.55)', fontSize: '0.82rem',
+            }}>
+              <i className="bi bi-shield-lock" style={{ color: '#4361ee', fontSize: '1rem' }} />
+              Detailed metrics (carbon, energy, waste) are private to each company. Only overall scores are shown here.
+            </div>
+          )}
+
           {loading && (
             <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.4)', padding: 80, fontSize: '1rem' }}>
-              <i className="bi bi-arrow-repeat" style={{ marginRight: 8, animation: 'spin 1s linear infinite' }} />
+              <i className="bi bi-arrow-repeat" style={{ marginRight: 8 }} />
               Loading leaderboard…
             </div>
           )}
@@ -145,9 +170,7 @@ export default function LeaderboardPage() {
                     {rows.map((row, i) => (
                       <tr key={row.username} style={{
                         borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
-                        background: row.username === user?.username
-                          ? 'rgba(67,97,238,0.08)'
-                          : 'transparent',
+                        background: row.username === user?.username ? 'rgba(67,97,238,0.08)' : 'transparent',
                         transition: 'background 0.15s',
                       }}
                         onMouseEnter={e => e.currentTarget.style.background = row.username === user?.username
@@ -165,7 +188,7 @@ export default function LeaderboardPage() {
                               background: 'linear-gradient(135deg,#4361ee,#8b5cf6)',
                               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                             }}>
-                              <i className="bi bi-person-fill" style={{ color: '#fff', fontSize: '0.72rem' }} />
+                              <i className="bi bi-building" style={{ color: '#fff', fontSize: '0.72rem' }} />
                             </div>
                             <span style={{ color: '#fff', fontWeight: 600 }}>{row.username}</span>
                             {row.username === user?.username && (
@@ -178,31 +201,20 @@ export default function LeaderboardPage() {
                           </div>
                         </td>
                         <td style={{ padding: '12px 16px' }}>
-                          <span style={{
-                            fontWeight: 700, fontSize: '0.92rem',
-                            color: scoreColor(row.sustainability_score),
-                          }}>
+                          <span style={{ fontWeight: 700, fontSize: '0.92rem', color: scoreColor(row.sustainability_score) }}>
                             {(+row.sustainability_score).toFixed(1)}
                           </span>
                         </td>
-                        <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>
-                          {(+row.environmental_score).toFixed(1)}
-                        </td>
-                        <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>
-                          {(+row.social_score).toFixed(1)}
-                        </td>
-                        <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>
-                          {(+row.carbon_emissions).toFixed(2)}
-                        </td>
-                        <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>
-                          {(+row.energy_consumption).toFixed(2)}
-                        </td>
-                        <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>
-                          {(+row.waste_production).toFixed(2)}
-                        </td>
-                        <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>
-                          {(+row.roi).toFixed(1)}%
-                        </td>
+                        {isAdmin && (
+                          <>
+                            <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>{(+row.environmental_score).toFixed(1)}</td>
+                            <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>{(+row.social_score).toFixed(1)}</td>
+                            <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>{(+row.carbon_emissions).toFixed(2)}</td>
+                            <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>{(+row.energy_consumption).toFixed(2)}</td>
+                            <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>{(+row.waste_production).toFixed(2)}</td>
+                            <td style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)' }}>{(+row.roi).toFixed(1)}%</td>
+                          </>
+                        )}
                         <td style={{ padding: '12px 16px' }}>
                           <TrendBadge trend={row.trend} trendScore={row.trend_score} />
                         </td>
