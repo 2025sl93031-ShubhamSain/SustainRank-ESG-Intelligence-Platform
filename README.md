@@ -34,10 +34,10 @@ SustainRank lets organisations measure, benchmark and improve their ESG (Environ
 <div align="center">
 
 **Home — Hero**
-<img src="./App images/Screenshot 2026-11-22 at 8.45.00 PM.png" alt="SustainRank Home" width="800" />
+<img src="./App%20images/Screenshot%202026-11-22%20at%208.45.00%E2%80%AFPM.png" alt="SustainRank Home" width="800" />
 
 **Home — Platform Overview**
-<img src="./App images/Screenshot 2026-11-22 at 8.45.09 PM.png" alt="Platform Overview" width="800" />
+<img src="./App%20images/Screenshot%202026-11-22%20at%208.45.09%E2%80%AFPM.png" alt="Platform Overview" width="800" />
 
 **Full ESG Assessment Wizard**
 <img src="./App images/Screenshot 2026-11-22 at 8.45.17 PM.png" alt="Assessment Wizard" width="800" />
